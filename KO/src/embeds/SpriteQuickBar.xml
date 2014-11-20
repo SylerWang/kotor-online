@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:551662560c79751dd8a892dcf59866e6:852787aadb3544c7dcfc78ee0faded26:7a5da7ddf45c9711f16ff715060eeb6f$ -->
+<TextureAtlas imagePath="SpriteQuickBar.png">
+    <SubTexture name="EmptyIcon" x="2" y="2" width="50" height="50"/>
+    <SubTexture name="QuickbarHighlight" x="54" y="2" width="61" height="61" frameX="-12" frameY="-12" frameWidth="85" frameHeight="85"/>
+    <SubTexture name="QuickbarMain" x="117" y="2" width="689" height="76"/>
+    <SubTexture name="QuickbarTop" x="2" y="80" width="655" height="62"/>
+    <SubTexture name="locked" x="659" y="80" width="20" height="20"/>
+    <SubTexture name="minus" x="681" y="80" width="28" height="29"/>
+    <SubTexture name="plus" x="711" y="80" width="28" height="29"/>
+    <SubTexture name="unlocked" x="741" y="80" width="20" height="20"/>
+</TextureAtlas>

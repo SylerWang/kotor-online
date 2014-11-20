@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elements>
+	<element id="50161">
+		<string>I know we need to get off this planet. There's been too much blasterfire around here for me to stay.</string>
+	</element>
+	<element id="50194">
+		<string>Never mind. I'll be going now.</string>
+	</element>
+	<element id="50195">
+		<string>Nothing. Let's keep moving.</string>
+	</element>
+	<element id="50197">
+		<string>All right. Let's keep moving, then.</string>
+	</element>
+	<element id="50199">
+		<string>What do you know about Telos?</string>
+	</element>
+	<element id="73800">
+		<string>Found anything?</string>
+	</element>
+	<element id="73841">
+		<string>{Sarcastic}You mean you didn't come here on purpose? I'm shocked, I really am.</string>
+	</element>
+	<element id="73954">
+		<string>What is this place?</string>
+	</element>
+</elements>

@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Fields>
+    <Field FieldIndex="0" Label="DelayEntry" Type="4" Value="0" />
+    <Field FieldIndex="1" Label="DelayReply" Type="4" Value="0" />
+    <Field FieldIndex="2" Label="NumWords" Type="4" Value="0" />
+    <Field FieldIndex="3" Label="EndConverAbort" Type="11" Value="" />
+    <Field FieldIndex="4" Label="EndConversation" Type="11" Value="" />
+    <Field FieldIndex="5" Label="Skippable" Type="0" Value="0" />
+    <Field FieldIndex="6" Label="AmbientTrack" Type="11" Value="" />
+    <Field FieldIndex="7" Label="AnimatedCut" Type="0" Value="0" />
+    <Field FieldIndex="8" Label="CameraModel" Type="11" Value="" />
+    <Field FieldIndex="9" Label="ComputerType" Type="0" Value="0" />
+    <Field FieldIndex="10" Label="ConversationType" Type="5" Value="0" />
+    <Field FieldIndex="11" Label="EntryList" Type="15">
+      <Value ID="0" StructIndex="1">
+        <Field FieldIndex="12" Label="Speaker" Type="10" Value="" />
+        <Field FieldIndex="13" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="14" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="15" Label="Text" Type="12">
+          <Value StringRef="73800">
+          </Value>
+        </Field>
+        <Field FieldIndex="16" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="17" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="18" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="19" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="20" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="21" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="22" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="23" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="24" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="25" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="26" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="27" Label="RepliesList" Type="15">
+          <Value ID="0" StructIndex="2">
+            <Field FieldIndex="28" Label="Index" Type="4" Value="0" />
+            <Field FieldIndex="29" Label="Active" Type="11" Value="" />
+            <Field FieldIndex="30" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="31" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="32" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="33" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="34" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="35" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="36" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="37" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="38" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="39" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="40" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="41" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="42" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="43" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="44" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="45" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="46" Label="Logic" Type="5" Value="0" />
+          </Value>
+          <Value ID="1" StructIndex="3">
+            <Field FieldIndex="47" Label="Index" Type="4" Value="1" />
+            <Field FieldIndex="48" Label="Active" Type="11" Value="" />
+            <Field FieldIndex="49" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="50" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="51" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="52" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="53" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="54" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="55" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="56" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="57" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="58" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="59" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="60" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="61" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="62" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="63" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="64" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="65" Label="Logic" Type="5" Value="0" />
+          </Value>
+          <Value ID="2" StructIndex="4">
+            <Field FieldIndex="66" Label="Index" Type="4" Value="4" />
+            <Field FieldIndex="67" Label="Active" Type="11" Value="ATTON_JOIN" />
+            <Field FieldIndex="68" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="69" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="70" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="71" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="72" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="73" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="74" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="75" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="76" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="77" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="78" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="79" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="80" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="81" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="82" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="83" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="84" Label="Logic" Type="5" Value="0" />
+          </Value>
+          <Value ID="3" StructIndex="5">
+            <Field FieldIndex="85" Label="Index" Type="4" Value="3" />
+            <Field FieldIndex="86" Label="Active" Type="11" Value="ATTON_JOIN" />
+            <Field FieldIndex="87" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="88" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="89" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="90" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="91" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="92" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="93" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="94" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="95" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="96" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="97" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="98" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="99" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="100" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="101" Label="Not" Type="0" Value="1" />
+            <Field FieldIndex="102" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="103" Label="Logic" Type="5" Value="0" />
+          </Value>
+        </Field>
+        <Field FieldIndex="104" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="105" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="106" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="107" Label="CamVidEffect" Type="5" Value="0" />
+        <Field FieldIndex="108" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="109" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="110" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="111" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="112" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="113" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="114" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="115" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="116" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="117" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="118" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="119" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="120" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="121" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="122" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="123" Label="RecordNoVOOverri" Type="5" Value="0" />
+        <Field FieldIndex="124" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="125" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="126" Label="ActionParamStrB" Type="10" Value="" />
+      </Value>
+      <Value ID="1" StructIndex="6">
+        <Field FieldIndex="127" Label="Speaker" Type="10" Value="" />
+        <Field FieldIndex="128" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="129" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="130" Label="Text" Type="12">
+          <Value StringRef="50161">
+          </Value>
+        </Field>
+        <Field FieldIndex="131" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="132" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="133" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="134" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="135" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="136" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="137" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="138" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="139" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="140" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="141" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="142" Label="RepliesList" Type="15">
+          <Value ID="0" StructIndex="7">
+            <Field FieldIndex="143" Label="Index" Type="4" Value="1" />
+            <Field FieldIndex="144" Label="Active" Type="11" Value="" />
+            <Field FieldIndex="145" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="146" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="147" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="148" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="149" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="150" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="151" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="152" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="153" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="154" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="155" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="156" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="157" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="158" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="159" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="160" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="161" Label="Logic" Type="5" Value="0" />
+          </Value>
+        </Field>
+        <Field FieldIndex="162" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="163" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="164" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="165" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="166" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="167" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="168" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="169" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="170" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="171" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="172" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="173" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="174" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="175" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="176" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="177" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="178" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="179" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="180" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="181" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="182" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="183" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="184" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="185" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="186" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="187" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="188" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+      <Value ID="2" StructIndex="8">
+        <Field FieldIndex="189" Label="Speaker" Type="10" Value="" />
+        <Field FieldIndex="190" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="191" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="192" Label="Text" Type="12">
+          <Value StringRef="73841">
+          </Value>
+        </Field>
+        <Field FieldIndex="193" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="194" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="195" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="196" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="197" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="198" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="199" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="200" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="201" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="202" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="203" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="204" Label="RepliesList" Type="15">
+          <Value ID="0" StructIndex="9">
+            <Field FieldIndex="205" Label="Index" Type="4" Value="2" />
+            <Field FieldIndex="206" Label="Active" Type="11" Value="ATTON_JOIN" />
+            <Field FieldIndex="207" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="208" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="209" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="210" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="211" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="212" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="213" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="214" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="215" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="216" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="217" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="218" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="219" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="220" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="221" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="222" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="223" Label="Logic" Type="5" Value="0" />
+          </Value>
+          <Value ID="1" StructIndex="10">
+            <Field FieldIndex="224" Label="Index" Type="4" Value="3" />
+            <Field FieldIndex="225" Label="Active" Type="11" Value="ATTON_JOIN" />
+            <Field FieldIndex="226" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="227" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="228" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="229" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="230" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="231" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="232" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="233" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="234" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="235" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="236" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="237" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="238" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="239" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="240" Label="Not" Type="0" Value="1" />
+            <Field FieldIndex="241" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="242" Label="Logic" Type="5" Value="0" />
+          </Value>
+        </Field>
+        <Field FieldIndex="243" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="244" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="245" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="246" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="247" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="248" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="249" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="250" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="251" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="252" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="253" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="254" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="255" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="256" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="257" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="258" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="259" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="260" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="261" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="262" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="263" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="264" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="265" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="266" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="267" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="268" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="269" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+    </Field>
+    <Field FieldIndex="270" Label="OldHitCheck" Type="0" Value="0" />
+    <Field FieldIndex="271" Label="ReplyList" Type="15">
+      <Value ID="0" StructIndex="11">
+        <Field FieldIndex="272" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="273" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="274" Label="Text" Type="12">
+          <Value StringRef="50199">
+          </Value>
+        </Field>
+        <Field FieldIndex="275" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="276" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="277" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="278" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="279" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="280" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="281" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="282" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="283" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="284" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="285" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="286" Label="EntriesList" Type="15">
+          <Value ID="0" StructIndex="12">
+            <Field FieldIndex="287" Label="Index" Type="4" Value="1" />
+            <Field FieldIndex="288" Label="Active" Type="11" Value="" />
+            <Field FieldIndex="289" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="290" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="291" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="292" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="293" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="294" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="295" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="296" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="297" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="298" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="299" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="300" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="301" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="302" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="303" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="304" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="305" Label="Logic" Type="5" Value="0" />
+          </Value>
+        </Field>
+        <Field FieldIndex="306" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="307" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="308" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="309" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="310" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="311" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="312" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="313" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="314" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="315" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="316" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="317" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="318" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="319" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="320" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="321" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="322" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="323" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="324" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="325" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="326" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="327" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="328" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="329" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="330" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="331" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="332" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+      <Value ID="1" StructIndex="13">
+        <Field FieldIndex="333" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="334" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="335" Label="Text" Type="12">
+          <Value StringRef="73954">
+          </Value>
+        </Field>
+        <Field FieldIndex="336" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="337" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="338" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="339" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="340" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="341" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="342" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="343" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="344" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="345" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="346" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="347" Label="EntriesList" Type="15">
+          <Value ID="0" StructIndex="14">
+            <Field FieldIndex="348" Label="Index" Type="4" Value="2" />
+            <Field FieldIndex="349" Label="Active" Type="11" Value="" />
+            <Field FieldIndex="350" Label="IsChild" Type="0" Value="0" />
+            <Field FieldIndex="351" Label="Active2" Type="11" Value="" />
+            <Field FieldIndex="352" Label="Param1" Type="5" Value="0" />
+            <Field FieldIndex="353" Label="Param1b" Type="5" Value="0" />
+            <Field FieldIndex="354" Label="Param2" Type="5" Value="0" />
+            <Field FieldIndex="355" Label="Param2b" Type="5" Value="0" />
+            <Field FieldIndex="356" Label="Param3" Type="5" Value="0" />
+            <Field FieldIndex="357" Label="Param3b" Type="5" Value="0" />
+            <Field FieldIndex="358" Label="Param4" Type="5" Value="0" />
+            <Field FieldIndex="359" Label="Param4b" Type="5" Value="0" />
+            <Field FieldIndex="360" Label="Param5" Type="5" Value="0" />
+            <Field FieldIndex="361" Label="Param5b" Type="5" Value="0" />
+            <Field FieldIndex="362" Label="ParamStrA" Type="10" Value="" />
+            <Field FieldIndex="363" Label="ParamStrB" Type="10" Value="" />
+            <Field FieldIndex="364" Label="Not" Type="0" Value="0" />
+            <Field FieldIndex="365" Label="Not2" Type="0" Value="0" />
+            <Field FieldIndex="366" Label="Logic" Type="5" Value="0" />
+          </Value>
+        </Field>
+        <Field FieldIndex="367" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="368" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="369" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="370" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="371" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="372" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="373" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="374" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="375" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="376" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="377" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="378" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="379" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="380" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="381" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="382" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="383" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="384" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="385" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="386" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="387" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="388" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="389" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="390" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="391" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="392" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="393" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+      <Value ID="2" StructIndex="15">
+        <Field FieldIndex="394" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="395" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="396" Label="Text" Type="12">
+          <Value StringRef="50197">
+          </Value>
+        </Field>
+        <Field FieldIndex="397" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="398" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="399" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="400" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="401" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="402" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="403" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="404" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="405" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="406" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="407" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="408" Label="EntriesList" Type="15">
+        </Field>
+        <Field FieldIndex="409" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="410" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="411" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="412" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="413" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="414" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="415" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="416" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="417" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="418" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="419" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="420" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="421" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="422" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="423" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="424" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="425" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="426" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="427" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="428" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="429" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="430" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="431" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="432" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="433" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="434" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="435" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+      <Value ID="3" StructIndex="16">
+        <Field FieldIndex="436" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="437" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="438" Label="Text" Type="12">
+          <Value StringRef="50194">
+          </Value>
+        </Field>
+        <Field FieldIndex="439" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="440" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="441" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="442" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="443" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="444" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="445" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="446" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="447" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="448" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="449" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="450" Label="EntriesList" Type="15">
+        </Field>
+        <Field FieldIndex="451" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="452" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="453" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="454" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="455" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="456" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="457" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="458" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="459" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="460" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="461" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="462" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="463" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="464" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="465" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="466" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="467" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="468" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="469" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="470" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="471" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="472" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="473" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="474" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="475" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="476" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="477" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+      <Value ID="4" StructIndex="17">
+        <Field FieldIndex="478" Label="Listener" Type="10" Value="" />
+        <Field FieldIndex="479" Label="AnimList" Type="15">
+        </Field>
+        <Field FieldIndex="480" Label="Text" Type="12">
+          <Value StringRef="50195">
+          </Value>
+        </Field>
+        <Field FieldIndex="481" Label="VO_ResRef" Type="11" Value="" />
+        <Field FieldIndex="482" Label="Script" Type="11" Value="" />
+        <Field FieldIndex="483" Label="Delay" Type="4" Value="4294967295" />
+        <Field FieldIndex="484" Label="Comment" Type="10" Value="" />
+        <Field FieldIndex="485" Label="Sound" Type="11" Value="" />
+        <Field FieldIndex="486" Label="Quest" Type="10" Value="" />
+        <Field FieldIndex="487" Label="PlotIndex" Type="5" Value="-1" />
+        <Field FieldIndex="488" Label="PlotXPPercentage" Type="8" Value="1" />
+        <Field FieldIndex="489" Label="WaitFlags" Type="4" Value="0" />
+        <Field FieldIndex="490" Label="CameraAngle" Type="4" Value="0" />
+        <Field FieldIndex="491" Label="FadeType" Type="0" Value="0" />
+        <Field FieldIndex="492" Label="EntriesList" Type="15">
+        </Field>
+        <Field FieldIndex="493" Label="SoundExists" Type="0" Value="0" />
+        <Field FieldIndex="494" Label="ActionParam1" Type="5" Value="0" />
+        <Field FieldIndex="495" Label="ActionParam1b" Type="5" Value="0" />
+        <Field FieldIndex="496" Label="ActionParam2" Type="5" Value="0" />
+        <Field FieldIndex="497" Label="ActionParam2b" Type="5" Value="0" />
+        <Field FieldIndex="498" Label="ActionParam3" Type="5" Value="0" />
+        <Field FieldIndex="499" Label="ActionParam3b" Type="5" Value="0" />
+        <Field FieldIndex="500" Label="ActionParam4" Type="5" Value="0" />
+        <Field FieldIndex="501" Label="ActionParam4b" Type="5" Value="0" />
+        <Field FieldIndex="502" Label="ActionParam5" Type="5" Value="0" />
+        <Field FieldIndex="503" Label="ActionParam5b" Type="5" Value="0" />
+        <Field FieldIndex="504" Label="ActionParamStrA" Type="10" Value="" />
+        <Field FieldIndex="505" Label="ActionParamStrB" Type="10" Value="" />
+        <Field FieldIndex="506" Label="AlienRaceNode" Type="5" Value="0" />
+        <Field FieldIndex="507" Label="CamVidEffect" Type="5" Value="-1" />
+        <Field FieldIndex="508" Label="Changed" Type="0" Value="0" />
+        <Field FieldIndex="509" Label="Emotion" Type="5" Value="4" />
+        <Field FieldIndex="510" Label="FacialAnim" Type="5" Value="0" />
+        <Field FieldIndex="511" Label="NodeID" Type="5" Value="0" />
+        <Field FieldIndex="512" Label="NodeUnskippable" Type="5" Value="0" />
+        <Field FieldIndex="513" Label="PostProcNode" Type="5" Value="0" />
+        <Field FieldIndex="514" Label="RecordNoOverri" Type="5" Value="0" />
+        <Field FieldIndex="515" Label="RecordVO" Type="5" Value="0" />
+        <Field FieldIndex="516" Label="Script2" Type="11" Value="" />
+        <Field FieldIndex="517" Label="VOTextChanged" Type="5" Value="0" />
+        <Field FieldIndex="518" Label="CameraID" Type="5" Value="-1" />
+        <Field FieldIndex="519" Label="RecordNoVOOverri" Type="5" Value="0" />
+      </Value>
+    </Field>
+    <Field FieldIndex="520" Label="StartingList" Type="15">
+      <Value ID="0" StructIndex="18">
+        <Field FieldIndex="521" Label="Index" Type="4" Value="0" />
+        <Field FieldIndex="522" Label="Active" Type="11" Value="" />
+        <Field FieldIndex="523" Label="Param2" Type="5" Value="0" />
+        <Field FieldIndex="524" Label="Param3b" Type="5" Value="0" />
+        <Field FieldIndex="525" Label="Param2b" Type="5" Value="0" />
+        <Field FieldIndex="526" Label="Param1b" Type="5" Value="0" />
+        <Field FieldIndex="527" Label="Param5" Type="5" Value="0" />
+        <Field FieldIndex="528" Label="Param4b" Type="5" Value="0" />
+        <Field FieldIndex="529" Label="Param1" Type="5" Value="0" />
+        <Field FieldIndex="530" Label="Logic" Type="5" Value="0" />
+        <Field FieldIndex="531" Label="Param5b" Type="5" Value="0" />
+        <Field FieldIndex="532" Label="Param3" Type="5" Value="0" />
+        <Field FieldIndex="533" Label="Param4" Type="5" Value="0" />
+        <Field FieldIndex="534" Label="ParamStrA" Type="10" Value="" />
+        <Field FieldIndex="535" Label="ParamStrB" Type="10" Value="" />
+        <Field FieldIndex="536" Label="Not" Type="0" Value="0" />
+        <Field FieldIndex="537" Label="Not2" Type="0" Value="0" />
+        <Field FieldIndex="538" Label="Active2" Type="11" Value="" />
+      </Value>
+    </Field>
+    <Field FieldIndex="539" Label="UnequipHItem" Type="0" Value="0" />
+    <Field FieldIndex="540" Label="UnequipItems" Type="0" Value="0" />
+    <Field FieldIndex="541" Label="StuntList" Type="15">
+    </Field>
+    <Field FieldIndex="542" Label="VO_ID" Type="10" Value="" />
+    <Field FieldIndex="543" Label="EditorInfo" Type="10" Value="v2.3.2 Apr 30, 2008 LastEdit: 04-Sep-14 10:33:30" />
+</Fields>

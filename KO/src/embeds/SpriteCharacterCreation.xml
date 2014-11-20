@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="SpriteCharacterCreation.jpg">
+    <SubTexture name="CharacterCreation" x="0" y="0" width="1920" height="1080"/>
+</TextureAtlas>
