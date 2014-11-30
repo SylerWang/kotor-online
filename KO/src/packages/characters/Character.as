@@ -14,11 +14,6 @@ package packages.characters
 	
 	public class Character extends Object
 	{
-		public var startVector:Vector3D = new Vector3D;
-		
-		public var startPoint:Point = new Point;
-		public var endPoint:Point = new Point;
-		
 		public var level:int=1;
 		public var talents: Array = new Array;
 		public var activeAbilitiesType:int=0;
@@ -36,12 +31,16 @@ package packages.characters
 		private var weaponId:int=-1;
 		private var dialogId:int=-1;
 		
+		public var actions: Array = new Array;
+		
 		private var _strength:int;
 		private var _dexterity:int;
 		private var _constitution:int;
 		private var _intelligence:int;
 		private var _wisdom:int;
 		private var _charisma:int;
+		
+		private var _selected: Boolean = false;
 		
 		public var characterName:String = "Character";
 		public var avatar:Avatar;
@@ -56,8 +55,15 @@ package packages.characters
 		public var animatorClass:SkeletonAnimator;
 		public var animatorRace:SkeletonAnimator;
 		public var cells:Vector.<Cell> = new Vector.<Cell>();
-		public var activePosition:Vector3D = new Vector3D;
+
 		public var activeRotation:Vector3D = new Vector3D;
+		public var updateVector:Vector3D = new Vector3D;
+		public var destinationVector:Vector3D = new Vector3D;
+		public var routeVector:Vector3D = new Vector3D;
+		public var ratioVector:Vector3D = new Vector3D;
+		public var startVector:Vector3D = new Vector3D;
+		
+		public var currentTarget:Character;
 		
 		//Weapons
 		public var weaponMesh:Mesh;
@@ -79,6 +85,9 @@ package packages.characters
 				talents = Classes.getTalentsForClass(this);
 				//trace(Classes.classString( classes), talents.length);
 				initializeSkills();
+				
+				//set the default action to IDLE
+				actions.push(Action.IDLE);
 			}
 			return;
 		}
@@ -247,6 +256,11 @@ package packages.characters
 			return weaponId;
 		}
 		
+		public function get selected():Boolean
+		{
+			return _selected;
+		}
+		
 		public function set classes(id:int): void
 		{
 			classId = id;
@@ -280,6 +294,12 @@ package packages.characters
 		public function set weapon(id:int): void
 		{
 			weaponId = id;
+			return;
+		}
+		
+		public function set selected( value: Boolean): void
+		{
+			_selected = value;
 			return;
 		}
 		

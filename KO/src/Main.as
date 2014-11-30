@@ -30,6 +30,7 @@ package
 	import flash.text.*;
 	import flash.ui.Keyboard;
 	
+	import packages.characters.Action;
 	import packages.characters.Avatar;
 	import packages.characters.Character;
 	import packages.characters.Characters;
@@ -89,11 +90,11 @@ package
 		
 		// Away3D view instances
 		public static var away3dView : View3D;
-		public static var cameraPosition:Vector3D = new Vector3D;
+		public static var cameraDelta:Vector3D = new Vector3D;
 		
 		// SEA3D
 		public static var playerParty:Party = new Party();
-		public static var activePlayerCharacter:Character;
+		//public static var activePlayerCharacter:Character;
 		//Please note that the last string  "Camera" is a bogus, small resource that is needed only to make sure that the rest of the resources are getting loaded
 		//the actual camera is an orthographic one, created manually somewhere else
 		public static const sea3dResourcesString:Array = ["mesh_humanoid", "animation_navigation_pause2", "animation_navigation_runSS", "weapon_lightsaber", "Camera"];
@@ -131,7 +132,7 @@ package
 		//private var saberOpeningCounter:int = 0;
 		//private var saberZScaleSpeed:int = 5;
 		
-		public static var movingPlayer:Boolean = false;
+		//public static var movingPlayer:Boolean = false;
 		//public static var suspend: Boolean = true;
 		//public static var runSpeed:Number;
 		public static var running:Boolean = true;
@@ -146,8 +147,8 @@ package
 		//public static const currentMapScaleY:Number = 1;
 		private var imageMapCounter:int = -1;
 		public static var mapGrids: Array = new Array;
-		public static var currentMapCharacters: Array = new Array;
-		public static var currentConversationOwner:Character;
+		//public static var currentMapCharacters: Array = new Array;
+		//public static var currentConversationOwner:Character;
 		
 		//Pre-loader resources
 		_loaderImagesVector[0] = "ui/welcome/kr_logo.jxr";
@@ -578,9 +579,7 @@ package
 		 */
 		private function onEnterFrame(event : Event) : void 
 		{
-			if (playerParty.members.length>0) CHARACTERS.updateCharacter(playerParty);
-			
-			if (movingPlayer) 	MOVEONMAP.updatingMap();
+			if (MAP.allCharacters.length>0) CHARACTERS.updateCharacters(MAP.allCharacters);
 			
 			if (INTRO.intro && !introState)
 			{
@@ -597,19 +596,18 @@ package
 				away3dView.render();
 				if(isCharacterCreation)
 				{
-					//default character male human guardian core
-					var character:Character = new Character(0,false);
-					character.gender = Gender.MALE;
-					character.race = Race.HUMAN;
-					character.classes = Classes.GUARDIAN;
-					character.origin = Origins.CORE;
-					//playerCharacter = character;
+					//default player male human guardian core
+					var player:Character = new Character(0,false);
+					player.gender = Gender.MALE;
+					player.race = Race.HUMAN;
+					player.classes = Classes.GUARDIAN;
+					player.origin = Origins.CORE;
 					//trace( "setting the player Main.playerCharacter to",Gender.genderString(Main.playerCharacter.genderId), Race.raceString(Main.playerCharacter.raceId), Classes.classString(Main.playerCharacter.classes));
 					playerParty.members.splice(0,1);
-					playerParty.members.push( character);
-					if( character.avatar == null)	var avatar: Avatar = new Avatar( character, true);
-					avatar.setAvatar(character);
-					//avatar.setAvatar(character);//needed twice to actually  set it, I don't know why
+					playerParty.members.push( player);//this is the first default
+					if(player.avatar == null)
+						var avatar: Avatar = new Avatar( player, true);
+					avatar.setAvatar(player);
 					isCharacterCreation=false;
 				}
 			}
@@ -621,7 +619,9 @@ package
 				if(isMenu)
 				{
 					var randomCharacter:Character = new Character(0, false);
-					playerParty.members.push(randomCharacter);
+					playerParty.members.push(randomCharacter);//randomize
+					//this is not really needed, but is used to listen to skip the intro
+					MAP.allCharacters.push(randomCharacter);
 					if( randomCharacter.avatar == null)	var randomAvatar:Avatar = new Avatar(randomCharacter, true);
 					randomAvatar.randomAvatar(randomCharacter);
 					
@@ -630,6 +630,28 @@ package
 			}
 			else if(gameState)			
 			{
+				//all game related operations happen here
+				
+				/*//if the active character wants to initiate the conversation with an NPC that is further away, first, it needs to get closer to it
+				if(activePlayerCharacter.currentTarget != null && activePlayerCharacter.currentTarget.dialog != -1)		
+				{
+					if(activePlayerCharacter.action != Action.MOVE)
+						activePlayerCharacter.action = Action.MOVE;
+					MOVEONMAP.moving(activePlayerCharacter.endPoint.x,activePlayerCharacter.endPoint.y);
+				}*/
+				
+				/*for each(var partyMember: Character in playerParty.members)
+				{
+					if(partyMember.actions[0] == Action.MOVE)
+						MOVEONMAP.updatingMapPosition(partyMember);
+				}*/
+				
+				for each(var character: Character in Main.MAP.allCharacters)
+				{	
+					if(character.actions[0] == Action.MOVE)
+						MOVEONMAP.updatingMapPosition(character);
+				}
+				
 				//starlingMap.nextFrame();
 				away3dView.render();
 				starlingFront.nextFrame();
@@ -638,6 +660,7 @@ package
 			else  trace( "no defined state");
 		}
 
+		//TO DO what a hack this is, I need to learn how to make it better. :-)
 		public static function pathTilesListeners(): void
 		{
 			MAIN.pathListeners();
@@ -663,16 +686,42 @@ package
 			var _x:int = event.localPosition.x + 512;
 			var _y:int = - event.localPosition.z + 512;
 			//trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
-			if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")	movingPlayer = true;
+			if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
+			{
+				//check against only party members
+				for each( var partyMember: Character in playerParty.members)
+				{
+					if(partyMember.selected == true)
+						partyMember.actions.unshift(Action.MOVE);
+				}
+			}
+			//trace( "main 3-D click on tiles");
 		}
 		
 		private function onMouseClick( event:MouseEvent): void
 		{
-			//if (overStarlingMenu == false || suspend == false)
 			if (gameState == true)
 			{
-				if (!suspendState)
-					MOVEONMAP.moving( event.stageX, event.stageY);
+				//trace( "2-D click on stage.");
+				//check against only selected party member
+				for each( var partyMember: Character in playerParty.members)
+				{
+					if(partyMember.selected == true)
+					{
+						if (!suspendState)// && activePlayerCharacter.currentTarget == null)
+						{
+							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
+							var middle: Vector3D = partyMember.characterClass.position;
+							var relativeX: Number = (APP_WIDTH/2 - event.stageX) + middle.x;
+							var relativeY: Number = (APP_HEIGHT/2 - event.stageY) * MAP3D.say + middle.y;
+							var relativeZ: Number = -(APP_HEIGHT/2 - event.stageY) * MAP3D.caz + middle.z;
+							var destination: Vector3D = new Vector3D(relativeX, relativeY, relativeZ);
+							//trace("destination", destination);
+							
+							MOVEONMAP.moving(destination, partyMember);
+						}
+					}
+				}
 			}
 		}
 		
@@ -760,6 +809,19 @@ package
 			
 			//STATES.handleStates("menuState");
 			return;
+		}
+		
+		public static function get selectedCharacter(): Character
+		{
+			var partyMember: Character; 
+			for (var i:int=0;i<playerParty.members.length;i++)
+			{
+				partyMember = playerParty.members[i];
+				if(partyMember.selected = true)
+					 return partyMember;
+			}
+			//if for some reason no party members are selected,then fall back on the member at index zero
+			return playerParty.members[0];//but this should never happen
 		}
 	}
 }

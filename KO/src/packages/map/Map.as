@@ -10,33 +10,18 @@ package packages.map
     public class Map extends Object
     {
 		public var current:Map;
-		public var startVector:Vector3D = new Vector3D;
+		public var allCharacters: Array = new Array;
+		public var enemies: Array = new Array;
 		
 		public var mapID:int=0;
-		public var pathSquares:Array = new Array();
-		public var squares:Array = new Array();
-		public var route:Array = new Array();
-		public var mapImages:Array = new Array();
-		public var mapPathImages:Array = new Array();
-		//public var mapPathBitmapData:Array = new Array();
+		public var pathSquares:Array = new Array;
+		public var squares:Array = new Array;
+		public var route:Array = new Array;
+
 		public var targetLocation:Cell;
 		public var currentLocation:Cell;
-		public var midX:Number;
-		public var midY:Number;
-		public var currentMapX:Number = 0;
-		public var currentMapY:Number = 0;
-		//public var divider:int;
-		public var _pixel:uint;
-		public var _point:Point;
-		public var _center:Point;
-		public var _routePoint:Point;
-		public var _tempPoint:Point = new Point;
-		//public var _localPoint:Point = new Point;//not needed?
+		
 		public var runSpeed:Number;
-		public var inTransit:Boolean=false;
-		//public var _bestPath:Array = new Array();
-		//public var counter:int=0;
-		//public var deltaPoint:Point = new Point;
 		
         public function Map()
         {
@@ -50,6 +35,8 @@ package packages.map
 			 pathSquares=[];
 			 squares=[];
 			 route=[];
+			 allCharacters=[];
+			 enemies=[];
 		}
 		
 		private function get moving():Boolean
@@ -70,7 +57,6 @@ package packages.map
 			{
 				route.splice(0, 1);
 			}
-			inTransit = true;
 			
 			/*if (selectedChar && selectedChar.avatar) 
 			{
@@ -82,71 +68,83 @@ package packages.map
 			return;
 		}
 		
-		public function updateMapPoint(): void
+		public function updateMapLocation(character: Character): void
 		{
-			if (_tempPoint.equals(_point.subtract(_center)) == false)
+			//if there is any difference in between current vector and destination vector, it still needs to move
+			if (Main.MAP3D.zeroVector.equals(character.destinationVector.subtract(character.routeVector)) == false)
 			{
-				//trace(_tempPoint,_point.subtract(_center));
-				inTransit = true;
-				
-				var _middlePoint: Point = new Point;
-				_middlePoint.x = midX;
-				_middlePoint.y = midY;
-				
 				if(Main.running)	 runSpeed=4.5;
 				else	 runSpeed=3;
+				//TO DO consolidate running/walking/stealth speed in character class with a getter
 				
-				_routePoint = moveAlongRoute(_point, _middlePoint, runSpeed);
-				
-				midX = _routePoint.x;// + _localPoint.x;
-				midY = _routePoint.y;// + _localPoint.y;
+				character.routeVector = moveAlongRoute(character.destinationVector, character.routeVector, runSpeed);
 			}
 			else
 			{
-				Main.activePlayerCharacter.startVector = Main.activePlayerCharacter.characterClass.position;
-				Main.cameraPosition = Main.away3dView.camera.position;
-				//Main.MAP3D.mapTilesPosition = Main.mapTiles.position;
+				//reached the destination from the MOVE action, so time to prepare for the next queued action
+				character.actions.shift();
+				character.ratioVector = new Vector3D;
+				character.startVector = character.characterClass.position;
 				
-				//trace( "finished moving",Main.activePlayerCharacter.startVector, Main.MAP3D.mapTilesPosition);
-				
-				_tempPoint = new Point;
-				
-				inTransit = false;
-			}
-		}
-		
-		public function moveAlongRoute(destinationPoint:Point, middlePoint:Point, speed:Number):Point
-		{
-			var updatePoint:Point = null;
-			if (destinationPoint == null) 
-			{
-				return middlePoint;
-			}
-			var deltaPoint:Point = new Point(destinationPoint.x - middlePoint.x, destinationPoint.y - middlePoint.y);
-			
-			deltaPoint.normalize(speed);
-			updatePoint = middlePoint.add(deltaPoint);
-			if (middlePoint.x < destinationPoint.x) 
-			{
-				updatePoint.x = Math.min(updatePoint.x, destinationPoint.x);
-			}
-			else 
-			{
-				updatePoint.x = Math.max(updatePoint.x, destinationPoint.x);
-			}
-			if (middlePoint.y < destinationPoint.y) 
-			{
-				updatePoint.y = Math.min(updatePoint.y, destinationPoint.y);
-			}
-			else 
-			{
-				updatePoint.y = Math.max(updatePoint.y, destinationPoint.y);
+				//trace( "finished moving",character.startVector);
 			}
 			
-			_tempPoint.x = updatePoint.x - _center.x;// + currentMapX;
-			_tempPoint.y = updatePoint.y - _center.y;// + currentMapY;
-			
-			return updatePoint;
+			function moveAlongRoute(destinationVector:Vector3D,  middleVector:Vector3D, speed:Number):Vector3D
+			{
+				if (destinationVector == null) 
+				{
+					return  middleVector;
+				}
+				
+				//this approach might be a hack
+				var deltaX: Point = new Point(destinationVector.x - middleVector.x,0);
+				var deltaY: Point = new Point(destinationVector.y - middleVector.y,0);
+				var deltaZ: Point = new Point(destinationVector.z - middleVector.z,0);
+				
+				var max: Number = Math.max(Math.abs(deltaX.x),Math.abs(deltaY.x),Math.abs(deltaZ.x));
+				
+				if(character.ratioVector.x == 0 && character.ratioVector.y == 0 && character.ratioVector.z == 0)
+				{
+					character.ratioVector.x = Math.abs(destinationVector.x - character.startVector.x)/max;
+					character.ratioVector.y = Math.abs(destinationVector.y - character.startVector.y)/max;
+					character.ratioVector.z = Math.abs(destinationVector.z - character.startVector.z)/max;
+					//trace( ratioX, ratioY, ratioZ,deltaX,deltaY,deltaZ);
+				}
+				
+				deltaX.normalize(speed*character.ratioVector.x);
+				deltaY.normalize(speed*character.ratioVector.y);
+				deltaZ.normalize(speed*character.ratioVector.z);
+				
+				character.updateVector = middleVector.add(new Vector3D(deltaX.x,deltaY.x,deltaZ.x));
+				
+				//the following is needed to make sure that eventually the character.update vector will have the exact values with the destination vector, so that the zero vector condition becomes true and the move action stops
+				if ( middleVector.x < destinationVector.x) 
+				{
+					character.updateVector.x = Math.min(character.updateVector.x, destinationVector.x);
+				}
+				else 
+				{
+					character.updateVector.x = Math.max(character.updateVector.x, destinationVector.x);
+				}
+				if ( middleVector.y < destinationVector.y) 
+				{
+					character.updateVector.y = Math.min(character.updateVector.y, destinationVector.y);
+				}
+				else 
+				{
+					character.updateVector.y = Math.max(character.updateVector.y, destinationVector.y);
+				}
+				if ( middleVector.z < destinationVector.z) 
+				{
+					character.updateVector.z = Math.min(character.updateVector.z, destinationVector.z);
+				}
+				else 
+				{
+					character.updateVector.z = Math.max(character.updateVector.z, destinationVector.z);
+				}
+				
+				return character.updateVector;
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ package packages.gui
 {
 	import feathers.controls.Button;
 	
+	import packages.characters.Character;
 	import packages.characters.Classes;
 	import packages.skills.Skill;
 	import packages.skills.TalentLine;
@@ -27,6 +28,7 @@ package packages.gui
  		private var talentLine:TalentLine;
 		private var selectedSkill:Skill;
 		public var selectedButton: Button;
+		private var selectedCharacter:Character;
 		
 		public function AbilitiesLogic(arg1:AbilitiesSprite)
 		{
@@ -38,6 +40,10 @@ package packages.gui
 		public function addedToStageHandler( event: Event): void
 		{
 			clip.removeEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
+			
+			//set selected character
+			selectedCharacter = Main.selectedCharacter;
+			
 			if( Main.abilitiesWindowPosition.x == 0 && Main.abilitiesWindowPosition.y == 0)
 			{
 				clip.x = Main.APP_WIDTH/2 - clip.width/2;
@@ -110,13 +116,13 @@ package packages.gui
 			handleAvailablePoints();
 			
 			//add class name to window label
-			var className: String = Classes.classString( Main.activePlayerCharacter.classes);
+			var className: String = Classes.classString(selectedCharacter.classes);
 			//clip.windowLabelText.text = "";//reset the text
 			clip.windowLabelText.text = "skilltree: " + className;
 			
-			/*trace( "talent lines available for active character:", Main.activePlayerCharacter.talents.length);
-			for(i=0;i<Main.activePlayerCharacter.talents.length;i++)
-				 trace(TalentLine.talentString(Main.activePlayerCharacter.talents[i].type)+"_"+TalentLine.talentString(Main.activePlayerCharacter.talents[i].treeId));*/
+			/*trace( "talent lines available for active character:", selectedCharacter.talents.length);
+			for(i=0;i<selectedCharacter.talents.length;i++)
+				 trace(TalentLine.talentString(selectedCharacter.talents[i].type)+"_"+TalentLine.talentString(selectedCharacter.talents[i].treeId));*/
 		}
 		
 		//populate icons for active character
@@ -127,31 +133,31 @@ package packages.gui
 				//set the icon type in abilities slot when abilities window added to button
 				if(i==0)
 				{
-					abilitiesIndex = Main.activePlayerCharacter.activeAbilitiesType-1;
-					if(abilitiesIndex==-1)	 abilitiesIndex = Main.activePlayerCharacter.talents.length-1;
+					abilitiesIndex = selectedCharacter.activeAbilitiesType-1;
+					if(abilitiesIndex==-1)	 abilitiesIndex = selectedCharacter.talents.length-1;
 					getAbilities(i, abilitiesIndex);
 				}
 				if(i==1)
 				{
-					abilitiesIndex = Main.activePlayerCharacter.activeAbilitiesType;
+					abilitiesIndex = selectedCharacter.activeAbilitiesType;
 					getAbilities(i, abilitiesIndex);
-					talentLine = Main.activePlayerCharacter.talents[abilitiesIndex] as TalentLine;
+					talentLine = selectedCharacter.talents[abilitiesIndex] as TalentLine;
 				}
 				if(i==2)
 				{
-					abilitiesIndex = Main.activePlayerCharacter.activeAbilitiesType+1;
-					if(abilitiesIndex==Main.activePlayerCharacter.talents.length)	 abilitiesIndex = 0;
+					abilitiesIndex = selectedCharacter.activeAbilitiesType+1;
+					if(abilitiesIndex==selectedCharacter.talents.length)	 abilitiesIndex = 0;
 					getAbilities(i, abilitiesIndex);
 				}
 			}
 			
 			function getAbilities( slot:int, index:int): void
 			{
-				abilitiesString = TalentLine.talentString(Main.activePlayerCharacter.talents[index].type)+"_"+TalentLine.talentString(Main.activePlayerCharacter.talents[index].treeId);
+				abilitiesString = TalentLine.talentString(selectedCharacter.talents[index].type)+"_"+TalentLine.talentString(selectedCharacter.talents[index].treeId);
 				//if active visible abilities slot, then display skill tree associated with abilities tree ID
 				if(slot==1)
 				{
-					var skills: Array = Main.activePlayerCharacter.talents[index].skillIds;
+					var skills: Array = selectedCharacter.talents[index].skillIds;
 					//trace( "active tree has", skills.length, "elements out of", clip.skillTreeArray.length);
 					if( skills.length > clip.skillTreeArray.length)
 						trace( "there are more talents in this tree then available icons to display them.");
@@ -173,7 +179,7 @@ package packages.gui
 						var childFrame:*=button.getChildByName("skillFrame");
 						if(childFrame)	button.removeChild(childFrame);
 						
-						var skill:Skill = new Skill(skills[j], Main.activePlayerCharacter);
+						var skill:Skill = new Skill(skills[j], selectedCharacter);
 						
 						//evaluate skill type to set  colored frame
 						var skillFrame: Image;
@@ -195,7 +201,7 @@ package packages.gui
 						button.addChild(skillFrame);
 						
 						//add skill icon
-						var skillIcon: Image = Skill.getSkillIconForClass( Main.activePlayerCharacter, skill.skillName);
+						var skillIcon: Image = Skill.getSkillIconForClass( selectedCharacter, skill.skillName);
 						skillIcon.name = "slot_" + String(skill.skillId) + "_" + skill.skillName;
 						button.addChild(skillIcon);
 						
@@ -204,7 +210,7 @@ package packages.gui
 						Main.O2D.unlockAbilitiesButton(button);
 
 						//evaluate unlocked skill state
-						var unlocked: Array = Main.activePlayerCharacter.unlockedSkills;
+						var unlocked: Array = selectedCharacter.unlockedSkills;
 						if(unlocked.length > 0)
 						{
 							for(var d:int=0;d<unlocked.length;d++)
@@ -258,7 +264,7 @@ package packages.gui
 		public function handleAvailablePoints(): void
 		{
 			var availablePointsValue:TextField = clip.availablePointsSprite.getChildByName("availablePointsValue") as TextField;
-			if(availablePointsValue)	availablePointsValue.text = String(Main.activePlayerCharacter.skillPoints);
+			if(availablePointsValue)	availablePointsValue.text = String(selectedCharacter.skillPoints);
 			
 			var availablePointsText:TextField = clip.availablePointsSprite.getChildByName("availablePointsText") as TextField;
 			if(availablePointsText)	
@@ -348,7 +354,7 @@ package packages.gui
 			
 			split = string.split("_");
 			
-			skill = new Skill(parseInt(split[1]), Main.activePlayerCharacter);
+			skill = new Skill(parseInt(split[1]), selectedCharacter);
 			skill.talentLine = talentLine;
 			
 			return skill;
@@ -356,7 +362,7 @@ package packages.gui
 		
 		private function handleSkillUnlock(): void
 		{
-			if( Main.activePlayerCharacter.skillPoints <= 0)
+			if( selectedCharacter.skillPoints <= 0)
 			{
 				trace( "no available points left!");
 				return;
@@ -384,12 +390,12 @@ package packages.gui
 			selectedButton.isToggle = true;
 			Main.O2D.unlockAbilitiesButton(selectedButton);
 			
-			Main.activePlayerCharacter.skillPoints--;
+			selectedCharacter.skillPoints--;
 			handleAvailablePoints();
 			
 			talentLine.unlocked++;
 			
-			Main.activePlayerCharacter.refreshSkills();
+			selectedCharacter.refreshSkills();
 			
 			//place new unlocked skill in quick bar slot if available and not PASSIVE
 			if(selectedSkill.type != Skill.TYPE_PASSIVE)
@@ -398,13 +404,13 @@ package packages.gui
 				if(index != -1)//available slot on quick bar found
 				{
 					//trace("found available slot",index);
-					var icon:Image = Skill.getSkillIconForClass( Main.activePlayerCharacter, selectedSkill.skillName);
+					var icon:Image = Skill.getSkillIconForClass( selectedCharacter, selectedSkill.skillName);
 					icon.name = "slot_" + String(index) + "_" + selectedSkill.skillName;
 					var slot: Button = StarlingFrontSprite.getInstance().quickBarLogic.clip.slots[index];
 					slot.addChildAt(icon,1);
-					for(var i:int=0;i< Main.activePlayerCharacter.skills.length;i++)
-						if( Main.activePlayerCharacter.skills[i].skillName == selectedSkill.skillName)
-							Main.activePlayerCharacter.skills[i].shortcutSlot = index;
+					for(var i:int=0;i< selectedCharacter.skills.length;i++)
+						if( selectedCharacter.skills[i].skillName == selectedSkill.skillName)
+							selectedCharacter.skills[i].shortcutSlot = index;
 				}
 				else trace( "all slots on Quick Bar are in use!");
 			}

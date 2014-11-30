@@ -94,11 +94,12 @@ package starling.rootsprites
 			
 			Main.STATES.handleStates("gameState");
 			
-			Main.activePlayerCharacter = new Character(cid, false);
-			Main.activePlayerCharacter.characterName = "Boske Tar";
-			Main.activePlayerCharacter.race = Main.playerParty.members[0].race;
-			Main.activePlayerCharacter.gender = Main.playerParty.members[0].gender;
-			Main.activePlayerCharacter.origin = Main.playerParty.members[0].origin;
+			var selectedCharacter: Character = new Character(cid, false);
+			
+			selectedCharacter.characterName = "Boske Tar";
+			selectedCharacter.race = Main.playerParty.members[0].race;
+			selectedCharacter.gender = Main.playerParty.members[0].gender;
+			selectedCharacter.origin = Main.playerParty.members[0].origin;
 			
 			//manually set the sea3d container to refer to humanoid meshes
 			for( var i:int=0;i<Main.sea3dResourcesString.length;i++)
@@ -107,33 +108,38 @@ package starling.rootsprites
 			//scale and position and X rotation meshes
 			Main.MOVEONMAP.positionOriginalMeshes(sea3dMesh);
 			
-			//up until now, this was used temporarily, but now it needs to be populated with a final chosen character
-			Main.playerParty.members.splice(0,1);
-			Main.playerParty.members.push(Main.activePlayerCharacter);
-			
 			//empty and re-create the chosen character avatar
-			Main.activePlayerCharacter.avatar = null;
-			Main.activePlayerCharacter.characterMesh = new Array;
-			var avatar: Avatar = new Avatar(Main.activePlayerCharacter, true);
-			avatar.setAvatar(Main.activePlayerCharacter);
+			selectedCharacter.avatar = null;
+			selectedCharacter.characterMesh = new Array;
+			var avatar: Avatar = new Avatar(selectedCharacter, true);
+			avatar.setAvatar(selectedCharacter);
 			
 			//set the active character in the middle of the screen
-			for( var m:int=0;m<Main.activePlayerCharacter.characterMesh.length;m++)
+			for( var m:int=0;m<selectedCharacter.characterMesh.length;m++)
 			{
-				Main.activePlayerCharacter.characterMesh[m].position = new Vector3D(0,0,0);
-				Main.activePlayerCharacter.characterMesh[m].rotation = new Vector3D(0,-45,0);
-				Main.activePlayerCharacter.characterMesh[m].scale = new Vector3D(1,1,1);
+				selectedCharacter.characterMesh[m].position = new Vector3D(0,0,0);
+				selectedCharacter.characterMesh[m].rotation = new Vector3D(0,-45,0);
+				selectedCharacter.characterMesh[m].scale = new Vector3D(1,1,1);
 			}
 			
 			//if player is Jedi, give it the light saber
-			if(Main.activePlayerCharacter.classes == Classes.GUARDIAN || Main.activePlayerCharacter.classes == Classes.CONSULAR)
-				Main.activePlayerCharacter.activeWeapon = Weapon.LIGHTSABER;
+			if(selectedCharacter.classes == Classes.GUARDIAN || selectedCharacter.classes == Classes.CONSULAR)
+				selectedCharacter.activeWeapon = Weapon.LIGHTSABER;
 			
-			trace( "setting the player Main.activePlayerCharacter to",Gender.genderString(Main.activePlayerCharacter.gender), Race.raceString(Main.activePlayerCharacter.race), Classes.classString(Main.activePlayerCharacter.classes), Origins.originsString(Main.activePlayerCharacter.origin), "with meshes",Main.activePlayerCharacter.characterMesh.length);
+			trace( "setting the player selectedCharacter to",Gender.genderString(selectedCharacter.gender), Race.raceString(selectedCharacter.race), Classes.classString(selectedCharacter.classes), Origins.originsString(selectedCharacter.origin), "with meshes",selectedCharacter.characterMesh.length);
 
+			//up until now, this was used temporarily, but now it needs to be populated with a final chosen character
+			Main.playerParty.members.splice(0,1);
+			Main.playerParty.members.push(selectedCharacter);
+			
+			//push the player character in the all characters array
+			Main.MAP.allCharacters = [];//empty the random character from the main menu
+			Main.MAP.allCharacters.push(selectedCharacter);
+			
 			//at this point, character is ready, so we can move on to the next
 			Main.MAP3D.setMapPlanes();
 			StarlingFrontSprite.getInstance().handleBars();
+			StarlingFrontSprite.getInstance().quickBarLogic.setChar(selectedCharacter);
 			Main.MAPLOGIC.initializeMap();
 		}			
 	}

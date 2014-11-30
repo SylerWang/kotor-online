@@ -92,7 +92,7 @@ package
 					//Main.away3dView.camera.lookAt( new Vector3D);
 					//trace(Main.away3dView.camera.position,Main.away3dView.camera.rotation);
 					(Main.away3dView.camera.lens as OrthographicLens).projectionHeight = Main.APP_HEIGHT;
-					Main.cameraPosition = Main.away3dView.camera.position;
+					Main.cameraDelta = Main.away3dView.camera.position;
 					camera = Main.away3dView.camera;
 					
 					//move source geometry out of view

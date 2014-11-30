@@ -7,6 +7,7 @@ package packages.characters
 	import away3d.entities.Mesh;
 	import away3d.events.*;
 	
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
 	import starling.display.Image;
@@ -19,6 +20,7 @@ package packages.characters
 	public class Avatar extends Object
 	{
 		private var currentCharacter:Character;
+		private var selectedCharacter:Character;
 		private var sea3dMesh:SEA3D;
 		
 		public function Avatar(character:Character, hasAvatar: Boolean = false)
@@ -28,12 +30,21 @@ package packages.characters
 			 return;
 		}
 		
+		//important function, here are actions being assigned
 		private function onMouseClick( event:MouseEvent3D): void
 		{
 			if(Main.gameState)
 			{
 				if(Main.suspendState)	 	trace( "suspend state!");
-				else if(charRef.dialog != -1)	
+				else	
+				{
+					selectedCharacter = Main.selectedCharacter;
+					//trace( "avatar 3-D mouse click.");
+					selectedCharacter.currentTarget = charRef;
+					if( selectedCharacter.actions[0] != Action.MOVE)
+						selectedCharacter.actions.unshift(Action.MOVE);
+				}
+				/*else if(charRef.dialog != -1)	
 				{
 					Main.suspendState = true;
 					Main.currentConversationOwner = charRef;
@@ -41,7 +52,7 @@ package packages.characters
 					StarlingFrontSprite.getInstance().handleDialog();
 				}
 				else	 trace("no dialog, ATTACK! :-)");
-				//trace( "initiating dialog",charRef.characterName,charRef.dialog);
+				//trace( "initiating dialog",charRef.characterName,charRef.dialog);*/
 			}
 		}
 		

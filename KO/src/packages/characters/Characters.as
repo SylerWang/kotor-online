@@ -14,8 +14,12 @@ package packages.characters
             trace(" Characters");
         }
 		
-		public function updateCharacter(party: Party):void
+		public function updateCharacters(characters: Array):void
 		{
+			//skip intro
+			if (Main.getKeyState(Keyboard.ESCAPE) && Main.introState)
+				Main.INTRO.skipIntro();
+			
 			//handle shortcuts
 			if (Main.getKeyState(Keyboard.K))
 			{
@@ -28,18 +32,21 @@ package packages.characters
 			//handle shortcuts during game
 			if (Main.suspendState == true)
 			{
-				if (Main.activePlayerCharacter.animatorClass.activeAnimationName != Animation.animationString(Animation.IDLE))
+				for each (var character: Character in characters)
 				{
-					Main.activePlayerCharacter.activeAnimationBody = Main.activePlayerCharacter.characterBody + "_" + Animation.animationString(Animation.IDLE);
-					Main.activePlayerCharacter.activeAnimationHead = Main.activePlayerCharacter.characterHead + "_" + Animation.animationString(Animation.IDLE);
-					Main.activePlayerCharacter.animatorClass.play(Main.activePlayerCharacter.activeAnimationBody, new CrossfadeTransition(.3));
-					if(Main.activePlayerCharacter.race != Race.UNDEFINED)	Main.activePlayerCharacter.animatorRace.play(Main.activePlayerCharacter.activeAnimationHead, new CrossfadeTransition(.3));
+					if (character.animatorClass.activeAnimationName != Animation.animationString(Animation.IDLE))
+					{
+						character.activeAnimationBody = character.characterBody + "_" + Animation.animationString(Animation.IDLE);
+						character.activeAnimationHead = character.characterHead + "_" + Animation.animationString(Animation.IDLE);
+						character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
+						if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));
+					}
 				}
 			}
 			else if (Main.suspendState != true)
 			{
 				//TO DO perhaps it should be only for active character in player party
-				for each (var character: Character in party.members)
+				for each (character in characters)
 				{	
 					character.animatorClass.playbackSpeed = 1;
 					if(character.race != Race.UNDEFINED)	character.animatorRace.playbackSpeed = 1;
@@ -49,102 +56,72 @@ package packages.characters
 						
 					}			
 					else //if (character.animatorClass.activeAnimationName == "run" || character.animatorClass.activeAnimationName == "pause2")
-					{			
-						if (Main.getKeyState(Keyboard.LEFT))
+					{	
+						//use keyboard only on active/selected party member
+						if( character.selected == true)
 						{
-							for( var m:int=0;m<character.characterMesh.length;m++)
+							if (Main.getKeyState(Keyboard.LEFT))
 							{
-								character.characterMesh[m].rotationY -= 5 * Main.timeStep.delta;
-							}
-							character.activeRotation.y -= 5 * Main.timeStep.delta;
-						}
-						if (Main.getKeyState(Keyboard.RIGHT))
-						{
-							for(m=0;m<character.characterMesh.length;m++)
-							{
-								character.characterMesh[m].rotationY += 5 * Main.timeStep.delta;
-							}
-							character.activeRotation.y += 5 * Main.timeStep.delta;
-						}
-						
-						/*else
-						{
-						if (character.animatorClass.activeAnimationName != "pause2") 
-						{
-						character.animatorClass.play("pause2", new CrossfadeTransition(.3));	
-						}
-						}*/
-						
-						/*if (Main.getKeyState(Keyboard.SPACE))
-						{
-							if (Main.alreadyPressed == false)
-							{
-								Main.alreadyPressed = true;
-								Main.swapPlayer();
-							}
-						}*/
-						
-						//test a condition
-						if (Main.getKeyState(Keyboard.COMMA))
-						{
-							if (Main.alreadyPressed == false)
-							{
-								Main.alreadyPressed = true;
-								//trace("before",Main.CONDITIONS.ATTON_JOIN);
-								Main.CONDITIONS.ATTON_JOIN=!Main.CONDITIONS.ATTON_JOIN;
-								//trace("after",Main.CONDITIONS.ATTON_JOIN);
-							}
-						}
-						
-						/*if (Main.getKeyState(Keyboard.SPACE))
-						{
-							if (Main.alreadyPressed == false)
-							{
-								Main.alreadyPressed = true;
-								Main.saberOn = !Main.saberOn;
-								if ( Main.saberOn )
+								for( var m:int=0;m<character.characterMesh.length;m++)
 								{
-									character.animatorClass.play("single_saber_wield_idle_to_melee", new CrossfadeTransition(.3), 0);
+									character.characterMesh[m].rotationY -= 5 * Main.timeStep.delta;
 								}
-								else
+								character.activeRotation.y -= 5 * Main.timeStep.delta;
+							}
+							if (Main.getKeyState(Keyboard.RIGHT))
+							{
+								for(m=0;m<character.characterMesh.length;m++)
 								{
-									character.animatorClass.playbackSpeed = -1;
-									character.animatorClass.play("single_saber_wield_idle_to_melee", new CrossfadeTransition(.3), 0);
+									character.characterMesh[m].rotationY += 5 * Main.timeStep.delta;
 								}
-								Main.weaponJointObject.visible = !Main.weaponJointObject.visible;
-								Main.hiltJointObject.visible = !Main.hiltJointObject.visible;
+								character.activeRotation.y += 5 * Main.timeStep.delta;
 							}
-						}*/
+							
+							//test a condition
+							if (Main.getKeyState(Keyboard.COMMA))
+							{
+								if (Main.alreadyPressed == false)
+								{
+									Main.alreadyPressed = true;
+									//trace("before",Main.CONDITIONS.ATTON_JOIN);
+									Main.CONDITIONS.ATTON_JOIN=!Main.CONDITIONS.ATTON_JOIN;
+									//trace("after",Main.CONDITIONS.ATTON_JOIN);
+								}
+							}
+						}
 						
-						if (Main.gameState && !Main.movingPlayer)
+						if (Main.gameState)//TO DO. Do I need this here? Or should I replace it with !suspendState
 						{
-							//TO DO  set animation based on active weapon //&& character.saberOn
-							//if (character.animatorClass.activeAnimationName != "single_saber_melee_idle")
-							if (character.animatorClass.activeAnimationName != Animation.animationString(Animation.IDLE))
+							if(character.actions[0] == Action.IDLE || character.actions[0] == Action.DIALOG)
 							{
-								character.activeAnimationBody = character.characterBody + "_" + Animation.animationString(Animation.IDLE);
-								character.activeAnimationHead = character.characterHead + "_" + Animation.animationString(Animation.IDLE);
-								//character.animatorClass.play("single_saber_melee_idle", new CrossfadeTransition(.3));
-								character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
-								if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));
+								//TO DO  set animation based on active weapon //&& character.saberOn
+								//if (character.animatorClass.activeAnimationName != "single_saber_melee_idle")
+								if (character.animatorClass.activeAnimationName != Animation.animationString(Animation.IDLE))
+								{
+									character.activeAnimationBody = character.characterBody + "_" + Animation.animationString(Animation.IDLE);
+									character.activeAnimationHead = character.characterHead + "_" + Animation.animationString(Animation.IDLE);
+									//character.animatorClass.play("single_saber_melee_idle", new CrossfadeTransition(.3));
+									character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
+									if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));
+								}
 							}
-						}
-						else if (Main.movingPlayer)
-						{
-							if (character.animatorClass.activeAnimationName != Animation.animationString(Animation.RUN)) 
+							else if (character.actions[0] == Action.MOVE)
 							{
-								character.activeAnimationBody = character.characterBody + "_" + Animation.animationString(Animation.RUN);
-								character.activeAnimationHead = character.characterHead + "_" + Animation.animationString(Animation.RUN);
-								character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
-								if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));	
+								if (character.animatorClass.activeAnimationName != Animation.animationString(Animation.RUN)) 
+								{
+									character.activeAnimationBody = character.characterBody + "_" + Animation.animationString(Animation.RUN);
+									character.activeAnimationHead = character.characterHead + "_" + Animation.animationString(Animation.RUN);
+									character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
+									if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));	
+								}
 							}
-						}
-						else
-						{
-							if (character.animatorClass.activeAnimationName != character.activeAnimationBody) 
+							else
 							{
-								character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
-								if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));
+								if (character.animatorClass.activeAnimationName != character.activeAnimationBody) 
+								{
+									character.animatorClass.play(character.activeAnimationBody, new CrossfadeTransition(.3));
+									if(character.race != Race.UNDEFINED)	character.animatorRace.play(character.activeAnimationHead, new CrossfadeTransition(.3));
+								}
 							}
 						}
 						
@@ -156,10 +133,6 @@ package packages.characters
 								character.animatorClass.play("single_saber_attack_1", new CrossfadeTransition(.3), 0);
 							}
 						}*/
-						
-						//skip intro
-						if (Main.getKeyState(Keyboard.ESCAPE) && Main.introState)
-							Main.INTRO.skipIntro();
 					}
 				}
 			}

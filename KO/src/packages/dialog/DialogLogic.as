@@ -4,8 +4,9 @@ package packages.dialog
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
-	import packages.sprites.DialogSprite;
 	import packages.audio.GameSound;
+	import packages.characters.Character;
+	import packages.sprites.DialogSprite;
 	
 	import starling.display.Sprite;
 	import starling.events.*;
@@ -241,7 +242,8 @@ package packages.dialog
 			
 			//handle the active text by calling a function
 			//this is the first entry, and belongs to an NPC-is this needed Here?
-			activeText(Main.currentConversationOwner.characterName);
+			var selectedCharacter: Character = Main.selectedCharacter;
+			activeText(selectedCharacter.currentTarget.characterName);
 			
 			//handle entry Replies
 			for(var j:int=0;j<entryListRepliesArray[c].length;j++)

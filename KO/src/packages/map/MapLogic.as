@@ -26,7 +26,6 @@ package packages.map
 		public function initializeMap(): void
 		{
 			populateMap();
-			selectCharacter(Main.activePlayerCharacter);
 			setWeapons();
 		}
 			
@@ -43,19 +42,19 @@ package packages.map
 				Grid.cellAt(cell.gridC, cell.gridR).encounterID = cell.encounterID;
 				if(cell.encounterID == 0)//this is starting point in the map
 				{
-					//Main.activePlayerCharacter.cells.splice(0,1);
-					Main.activePlayerCharacter.cells.push(cell);
+					var selectedCharacter: Character = Main.selectedCharacter;
+					//selectedCharacter.cells.splice(0,1);
+					selectedCharacter.cells.push(cell);
 					
 					var _x: Number = -Grid.cellAt(cell.gridC, cell.gridR).x;
 					var _y: Number = -Grid.cellAt(cell.gridC, cell.gridR).y;
 					
-					Main.activePlayerCharacter.startVector = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
-					for( var m:int=0;m<Main.activePlayerCharacter.characterMesh.length;m++)
+					selectedCharacter.startVector = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
+					for( var m:int=0;m<selectedCharacter.characterMesh.length;m++)
 					{
-						Main.activePlayerCharacter.characterMesh[m].position = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz); 
+						selectedCharacter.characterMesh[m].position = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz); 
 					}
-					Main.away3dView.camera.position = Main.cameraPosition.add(Main.activePlayerCharacter.startVector);
-					Main.cameraPosition = Main.away3dView.camera.position;
+					Main.away3dView.camera.position = selectedCharacter.startVector.add(Main.cameraDelta);
 				}
 				else
 				{
@@ -63,7 +62,8 @@ package packages.map
 					character.cells.push(cell);
 					if( character.avatar == null)	var avatar: Avatar = new Avatar( character, true);
 					avatar.setAvatar(character);
-					Main.currentMapCharacters[cell.encounterID] = character;
+					//Main.MAP.allCharacters[cell.encounterID] = character;
+					Main.MAP.allCharacters.push(character);
 				}
 			}
 			
@@ -77,7 +77,7 @@ package packages.map
 		
 		public function positionObjects(): void
 		{
-			for each (var character: Character in Main.currentMapCharacters)
+			for each (var character: Character in Main.MAP.allCharacters)
 			{
 				var cell: Cell = character.cells[0];
 				//trace( "before", character.cells[0].x,character.cells[0].y);
@@ -86,8 +86,9 @@ package packages.map
 				//TO DO maybe there's a better way
 				character.cells.splice(0,1);
 				character.cells.push(cell);
-				character.startPoint = Main.SPRITES.getGlobalToLocal(character.cells[0].x, character.cells[0].y);
-				//trace( "after", character.cells[0].x,character.cells[0].y, character.startPoint);
+				
+				character.startVector = new Vector3D(-character.cells[0].x,-character.cells[0].y*Main.MAP3D.say,character.cells[0].y*Main.MAP3D.caz);
+				
 				//startCell(cell);
 				for( var m:int=0;m< character.characterMesh.length;m++)
 				{
@@ -117,30 +118,10 @@ package packages.map
 		addChild(_sStart);
 		}*/
 		
-		public function selectCharacter(char:Character):void
-		{
-			//clearPortraitHighlights();
-			if (char == null) 
-			{
-				trace( " selected character missing! Falling back on default player at index 0");
-				char = Main.playerParty.members[0];
-			}
-			//char.portrait.setHighlight(true);
-			StarlingFrontSprite.getInstance().quickBarLogic.setChar(char);
-			return;
-		}
-		
 		public function setWeapons(): void
 		{
-			//setting weapon for characters in player party
-			for each (var player: Character in Main.playerParty.members)
-			{
-				if(player.activeWeapon != -1)
-					Weapon.setWeapon(player,player.activeWeapon);
-			}
-			
-			//setting weapon for active NPC on current map
-			for each (var character: Character in Main.currentMapCharacters)
+			//setting weapon for active characters on current map
+			for each (var character: Character in Main.MAP.allCharacters)
 			{
 				if(character.activeWeapon != -1)
 					Weapon.setWeapon(character,character.activeWeapon);

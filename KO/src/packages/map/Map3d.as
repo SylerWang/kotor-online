@@ -12,6 +12,8 @@ package packages.map
 
 	public class Map3d extends Object
 	{
+		public var zeroVector:Vector3D = new Vector3D;
+		
 		private var dw:int=1232;
 		//TO DO stupid floating numbers sine and cosine are messed up in action script 3, or to be exact:  "Stupid me." :-), So I need to set the values manually
 		//instead of sine and cosine of an angle

@@ -4,6 +4,7 @@ package starling.rootsprites
 	
 	import flash.geom.Point;
 	
+	import packages.characters.Character;
 	import packages.dialog.DialogLogic;
 	import packages.gui.AbilitiesLogic;
 	import packages.gui.QuickBarLogic;
@@ -21,6 +22,8 @@ package starling.rootsprites
 	public class StarlingFrontSprite extends Sprite
 	{
 		private static var _instance : StarlingFrontSprite;
+		
+		private var selectedCharacter:Character;
 		
 		public var dialogLogic:DialogLogic;
 		public var dialogSprite:DialogSprite = new DialogSprite;
@@ -197,19 +200,21 @@ package starling.rootsprites
 					//handle abilities window clicks on arrows
 					if(abilitiesWindow == true)
 					{
+						if(selectedCharacter == null)	selectedCharacter = Main.selectedCharacter;
+						
 						if(event.target is TextField && (event.target as TextField).name && (event.target as TextField).name.indexOf("arrow") != -1)
 						{
 							if((event.target as TextField).name == "arrowRight")
 							{
-								Main.activePlayerCharacter.activeAbilitiesType++;
-								if(Main.activePlayerCharacter.activeAbilitiesType == Main.activePlayerCharacter.talents.length)	 Main.activePlayerCharacter.activeAbilitiesType = 0;
+								selectedCharacter.activeAbilitiesType++;
+								if(selectedCharacter.activeAbilitiesType == selectedCharacter.talents.length)	 selectedCharacter.activeAbilitiesType = 0;
 								abilitiesLogic.setAbilities();
 								abilitiesLogic.setDetails();
 							}
 							else
 							{
-								Main.activePlayerCharacter.activeAbilitiesType--;
-								if(Main.activePlayerCharacter.activeAbilitiesType == -1)	 Main.activePlayerCharacter.activeAbilitiesType = Main.activePlayerCharacter.talents.length-1;
+								selectedCharacter.activeAbilitiesType--;
+								if(selectedCharacter.activeAbilitiesType == -1)	 selectedCharacter.activeAbilitiesType = selectedCharacter.talents.length-1;
 								abilitiesLogic.setAbilities();
 								abilitiesLogic.setDetails();
 							}

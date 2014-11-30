@@ -11,6 +11,7 @@ package
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
+	import packages.characters.Action;
 	import packages.characters.Character;
 	
 	import starling.display.Image;
@@ -21,10 +22,10 @@ package
 	
 	public class MoveOnMap extends MovieClip
     {
-		private var newX:Number;
+		/*private var newX:Number;
 		private var newY:Number;
 		private var tempX:Number=0;
-		private var tempY:Number=0;
+		private var tempY:Number=0;*/
 		
 		private var sCell:Vector2D;
 		private var eCell:Vector2D;
@@ -52,25 +53,24 @@ package
 			}
 		}
 		
-		//if player moving is true
-		public function updatingMap(): void
+		//if character current action is MOVE
+		public function updatingMapPosition(character: Character): void
 		{
-			Main.MAP.updateMapPoint();//this updates temp Point per frame
-			if (Main.MAP.inTransit == false) Main.movingPlayer = false;
-			if (Main.movingPlayer != false && Main.suspendState != true)
+			Main.MAP.updateMapLocation(character);//this updates temp Point per frame
+			
+			if (character.actions[0] == Action.MOVE && Main.suspendState != true)
 			{
 				//starling map Sprite not needed anymore, remove all its references
 				
-				var deltaVector:Vector3D = new Vector3D(-Main.MAP._tempPoint.x,-Main.MAP._tempPoint.y*Main.MAP3D.say,Main.MAP._tempPoint.y*Main.MAP3D.caz);
-				
-				for( var m:int=0;m<Main.activePlayerCharacter.characterMesh.length;m++)
+				for( var m:int=0;m<character.characterMesh.length;m++)
 				{
-					Main.activePlayerCharacter.characterMesh[m].position = Main.activePlayerCharacter.startVector.add(deltaVector);
+					character.characterMesh[m].position =  character.routeVector;
 				}
 				
-				Main.away3dView.camera.position = Main.cameraPosition.add(deltaVector);
+				if(character.selected == true)
+					Main.away3dView.camera.position = character.routeVector.add(Main.cameraDelta);
 				
-				/*//moving the active NPC
+				/*//moving the NPC
 				//TO DO updating  cell for player party as well
 				for each (var character: Character in Main.currentMapCharacters)
 				{
@@ -91,6 +91,48 @@ package
 			}
 		}
 
+		public function moving(destination: Vector3D, character: Character):void
+		{
+			//setting source and destination vectors
+			character.routeVector = character.startVector;
+			character.destinationVector = destination;
+			
+			//var rotationRad:Number = Math.atan2(target.z - char.z, mouseX - target.x) ;
+			//char.rotationY = rotationRad * (180 / Math.PI); // (180 / Math.PI) = radians to degrees
+			
+			var rotationRad:Number = Math.atan2(destination.z - character.routeVector.z, Math.abs(destination.x) - Math.abs(character.routeVector.x));
+			
+			//trace(rotationRad);
+			//TO DO to fix party member rotation
+			
+			for( var m:int=0;m<character.characterMesh.length;m++)
+			{
+				character.characterMesh[m].rotationY = rotationRad * (180 / Math.PI) - 90;
+			}
+			
+			//findPath();//TO DO, this broke when map tiles are now 3-D
+			
+			//trace("mouse was clicked", event.stageX, event.stageY, newX, newY);
+		}
+		
+		public function cellSprite(c:int,r:int): void
+		{
+			var _grid:Grid = Main.currentGrid;
+			var _sCell:Sprite = new Sprite;
+			_sCell.name= "cellSprite";
+			var _iCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
+			_iCell.alpha = 0.5;
+			_iCell.width = Main.cellSize;
+			_iCell.height = Main.cellSize;
+			var _string: String = String(c) + " " + String(r);
+			var _text:TextField = new TextField( Main.cellSize,Main.cellSize,_string, "Helvetica", 10, 0x000000);
+			_sCell.x = _grid.grid[c][r].x;
+			_sCell.y = _grid.grid[c][r].y;
+			_sCell.addChild(_iCell);
+			_sCell.addChild(_text);
+			//StarlingMapSprite.getInstance().addChild(_sCell);
+		}
+		
 		public function findPath(): void
 		{
 			var ArrayD:*=new Array();
@@ -101,7 +143,7 @@ package
 			if (sCell == null)		 
 			{
 				//trace( "vector starting cell empty, setting it as",Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
-				sCell = new Vector2D(Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
+				//sCell = new Vector2D(Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
 			}
 			
 			var _grid:Grid = Main.currentGrid;
@@ -109,18 +151,18 @@ package
 			//reposition the grid cells
 			for (var i:uint=0;i<_grid.grid.length;i++)
 			{
-				for (var m:uint=0;m<_grid.grid[0].length;m++)
+				/*for (var m:uint=0;m<_grid.grid[0].length;m++)
 				{
-					//_grid.grid[i][m].x = _grid.grid[i][m].x + StarlingMapSprite.getInstance().x;
-					//_grid.grid[i][m].y = _grid.grid[i][m].y + StarlingMapSprite.getInstance().y;
-					
-					//calculate and set best path array
-					var tX:uint = Math.abs( Main.MAP._point.x - (_grid.grid[i][m].x + Main.cellSize/2));
-					var tY:uint = Math.abs( Main.MAP._point.y - (_grid.grid[i][m].y + Main.cellSize/2));
-					var tS:uint = tX*tX + tY*tY;
-					
-					ArrayD.push({columns:i, rows:m, temp:tS});
-				}
+				//_grid.grid[i][m].x = _grid.grid[i][m].x + StarlingMapSprite.getInstance().x;
+				//_grid.grid[i][m].y = _grid.grid[i][m].y + StarlingMapSprite.getInstance().y;
+				
+				//calculate and set best path array
+				var tX:uint = Math.abs( Main.MAP._point.x - (_grid.grid[i][m].x + Main.cellSize/2));
+				var tY:uint = Math.abs( Main.MAP._point.y - (_grid.grid[i][m].y + Main.cellSize/2));
+				var tS:uint = tX*tX + tY*tY;
+				
+				ArrayD.push({columns:i, rows:m, temp:tS});
+				}*/
 			}
 			
 			ArrayD.sortOn("temp", Array.NUMERIC);
@@ -145,17 +187,17 @@ package
 			
 			/*for (var k:uint=0;k<bestPath.length;k++)
 			{
-				var _imageCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-				_imageCell.name= "cell";
-				_imageCell.width = Main.cellSize;
-				_imageCell.height = Main.cellSize;
-				_imageCell.x = bestPath[k].x;
-				_imageCell.y = bestPath[k].y;
-				_imageCell.alpha = 0.5;
-				StarlingMapSprite.getInstance().addChild(_imageCell);
+			var _imageCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
+			_imageCell.name= "cell";
+			_imageCell.width = Main.cellSize;
+			_imageCell.height = Main.cellSize;
+			_imageCell.x = bestPath[k].x;
+			_imageCell.y = bestPath[k].y;
+			_imageCell.alpha = 0.5;
+			StarlingMapSprite.getInstance().addChild(_imageCell);
 			}*/
 			
-			//move the player along the best path
+			/*//move the player along the best path
 			if (startCell == null)	
 			{
 				startCell = Main.activePlayerCharacter.cells[0];//_grid.grid[gColumns][gRows];
@@ -164,7 +206,7 @@ package
 			endCell = _grid.grid[ArrayD[0].columns][ArrayD[0].rows];
 			//TO DO moving NPC as well, not only the player
 			if (_grid.grid[ArrayD[0].columns][ArrayD[0].rows].isWalkable)
-			// && Main.MAP._pixel.toString(16) ==  "ff00")
+				// && Main.MAP._pixel.toString(16) ==  "ff00")
 			{
 				//Main.movingPlayer = true;
 				//updating starting cell for future calculations
@@ -175,75 +217,7 @@ package
 			}
 			sCell = eCell; //this is a vector 2-D
 			startCell = endCell; //this is a Cell
-		}
-		
-		public function moving(_mx: Number,_my: Number):void
-		{
-			newX = Main.APP_WIDTH/2;
-			newY = Main.APP_HEIGHT/2;
-			Main.MAP.midX = newX;
-			Main.MAP.midY = newY;
-			
-			Main.MAP._point = globalToLocal(new Point(_mx, _my));
-			Main.MAP._center = globalToLocal(new Point(Main.APP_WIDTH/2,Main.APP_HEIGHT/2));
-			
-			//Bitmap Image hits test
-			for (var j:int=0; j < Main.MAP.mapPathImages.length; j++)
-			{
-				var _x: Number = Main.MAP.mapPathImages[j].x;
-				var _y: Number = Main.MAP.mapPathImages[j].y;
-				var _xw: Number = Main.MAP.mapPathImages[j].x + Main.MAP.mapPathImages[j].width;
-				var _yh: Number = Main.MAP.mapPathImages[j].y + Main.MAP.mapPathImages[j].height;
-				if (_x < Main.MAP._point.x && _xw > Main.MAP._point.x && _y < Main.MAP._point.y && _yh > Main.MAP._point.y) 
-				{
-					var _localPoint: Point = new Point;
-					_localPoint.x = Main.MAP._point.x - _x;
-					_localPoint.y = Main.MAP._point.y - _y;
-					Main.MAP.mapPathImages[j].hitTest(_localPoint);
-					//trace(j,_x,_y,_xw,_yh, Main.MAP._point,_localPoint);
-				}
-				//trace(Main.MAP.mapPathImages[j]);
-			}
-			
-			//var rotationRad:Number = Math.atan2(target.z - char.z, mouseX - target.x) ;
-			//char.rotationY = rotationRad * (180 / Math.PI); // (180 / Math.PI) = radians to degrees
-			
-			var rotationRad:Number = Math.atan2( Main.MAP._point.y - Main.MAP._center.y, Main.MAP._point.x - Main.MAP._center.x) ;
-			//trace(rotationRad);
-			//TO DO to fix party member rotation
-			
-			for( var m:int=0;m<Main.activePlayerCharacter.characterMesh.length;m++)
-			{
-				Main.activePlayerCharacter.characterMesh[m].rotationY = rotationRad * (180 / Math.PI) - 90;
-			}
-			
-			/*if (Main.MAP._pixel.toString(16) == "ff00")
-			{
-				Main.movingPlayer = true;
-				//findPath();//TO DO, this broke when map tiles are now 3-D
-			}*/
-			
-			newX = _mx - newX;
-			newY = _my - newY;
-			//trace("mouse was clicked", event.stageX, event.stageY, newX, newY);
-		}
-		
-		public function cellSprite(c:int,r:int): void
-		{
-			var _grid:Grid = Main.currentGrid;
-			var _sCell:Sprite = new Sprite;
-			_sCell.name= "cellSprite";
-			var _iCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-			_iCell.alpha = 0.5;
-			_iCell.width = Main.cellSize;
-			_iCell.height = Main.cellSize;
-			var _string: String = String(c) + " " + String(r);
-			var _text:TextField = new TextField( Main.cellSize,Main.cellSize,_string, "Helvetica", 10, 0x000000);
-			_sCell.x = _grid.grid[c][r].x;
-			_sCell.y = _grid.grid[c][r].y;
-			_sCell.addChild(_iCell);
-			_sCell.addChild(_text);
-			//StarlingMapSprite.getInstance().addChild(_sCell);
+			*/
 		}
 	}
 }

@@ -166,7 +166,7 @@ package packages.gui
 				StarlingFrontSprite.getInstance().removeChild(StarlingFrontSprite.getInstance().draggedIcon);
 				//trace( "time to swap");
 				_split = d.split("_");	
-				StarlingFrontSprite.getInstance().draggedIcon = Skill.getSkillIconForClass( Main.activePlayerCharacter, _split[_split.length-1]);
+				StarlingFrontSprite.getInstance().draggedIcon = Skill.getSkillIconForClass( character, _split[_split.length-1]);
 				StarlingFrontSprite.getInstance().draggedIcon.name = d;
 				StarlingFrontSprite.getInstance().draggedIcon.x = tempX;
 				StarlingFrontSprite.getInstance().draggedIcon.y = tempY;
@@ -178,7 +178,7 @@ package packages.gui
 			if(_label== "0")	_label= "10";
 			if(_label== "-")	_label= "11";
 			if(_label== "=")	_label= "12";
-			icon = Skill.getSkillIconForClass( Main.activePlayerCharacter, _split[_split.length-1]);
+			icon = Skill.getSkillIconForClass( character, _split[_split.length-1]);
 			icon.name = "slot_" + _label + "_" + _split[_split.length-1];
 			for(var k:int=0;k<currentButton.numChildren;k++)
 			{
@@ -188,9 +188,9 @@ package packages.gui
 			}
 			currentButton.addChildAt(icon,1);
 			var _i:int = parseInt(_label);
-			for(var i:int=0;i< Main.activePlayerCharacter.skills.length;i++)
-				if( Main.activePlayerCharacter.skills[i].skillName == _split[_split.length-1])
-					Main.activePlayerCharacter.skills[i].shortcutSlot = _i;				
+			for(var i:int=0;i< character.skills.length;i++)
+				if( character.skills[i].skillName == _split[_split.length-1])
+					character.skills[i].shortcutSlot = _i;				
 			trace(StarlingFrontSprite.getInstance().draggedIcon.name, " is now", icon.name);
 		}
 		
@@ -198,12 +198,12 @@ package packages.gui
 		{
 			var _split: Array = new Array;
 			_split = s.split("_");
-			for(var i:int=0;i< Main.activePlayerCharacter.skills.length;i++)
-				if( Main.activePlayerCharacter.skills[i].skillName == _split[_split.length-1])
-					Main.activePlayerCharacter.skills[i].shortcutSlot = -1;
+			for(var i:int=0;i< character.skills.length;i++)
+				if( character.skills[i].skillName == _split[_split.length-1])
+					character.skills[i].shortcutSlot = -1;
 			var iconOnQuickBar:int = 0;
-			for(var j:int=0;j<Main.activePlayerCharacter.skills.length;j++)
-				if(Main.activePlayerCharacter.skills[j].shortcutSlot != -1)
+			for(var j:int=0;j<character.skills.length;j++)
+				if(character.skills[j].shortcutSlot != -1)
 					iconOnQuickBar++;
 			trace(StarlingFrontSprite.getInstance().draggedIcon.name, " is now removed and",iconOnQuickBar, "icons are  left on quick bar");
 		}
