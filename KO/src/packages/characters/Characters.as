@@ -66,7 +66,6 @@ package packages.characters
 								{
 									character.characterMesh[m].rotationY -= 5 * Main.timeStep.delta;
 								}
-								character.activeRotation.y -= 5 * Main.timeStep.delta;
 							}
 							if (Main.getKeyState(Keyboard.RIGHT))
 							{
@@ -74,7 +73,6 @@ package packages.characters
 								{
 									character.characterMesh[m].rotationY += 5 * Main.timeStep.delta;
 								}
-								character.activeRotation.y += 5 * Main.timeStep.delta;
 							}
 							
 							//test a condition
@@ -92,7 +90,7 @@ package packages.characters
 						
 						if (Main.gameState)//TO DO. Do I need this here? Or should I replace it with !suspendState
 						{
-							if(character.actions[0] == Action.IDLE || character.actions[0] == Action.DIALOG)
+							if(character.actions[0] == Action.IDLE || character.actions[0] == Action.DIALOG || character.actions.length == 0)
 							{
 								//TO DO  set animation based on active weapon //&& character.saberOn
 								//if (character.animatorClass.activeAnimationName != "single_saber_melee_idle")

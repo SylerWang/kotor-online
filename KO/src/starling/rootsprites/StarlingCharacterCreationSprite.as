@@ -122,11 +122,15 @@ package starling.rootsprites
 				selectedCharacter.characterMesh[m].scale = new Vector3D(1,1,1);
 			}
 			
+			//adjust position -no condition needed as the genders are predictable
+			var adjustment:int = Main.MAP3D.adjust(Gender.genderString(selectedCharacter.gender));
+			selectedCharacter.adjustVector = new Vector3D(0,adjustment*Main.MAP3D.say,-adjustment*Main.MAP3D.caz);
+			
 			//if player is Jedi, give it the light saber
 			if(selectedCharacter.classes == Classes.GUARDIAN || selectedCharacter.classes == Classes.CONSULAR)
 				selectedCharacter.activeWeapon = Weapon.LIGHTSABER;
 			
-			trace( "setting the player selectedCharacter to",Gender.genderString(selectedCharacter.gender), Race.raceString(selectedCharacter.race), Classes.classString(selectedCharacter.classes), Origins.originsString(selectedCharacter.origin), "with meshes",selectedCharacter.characterMesh.length);
+			trace(adjustment, "setting the player selectedCharacter to",Gender.genderString(selectedCharacter.gender), Race.raceString(selectedCharacter.race), Classes.classString(selectedCharacter.classes), Origins.originsString(selectedCharacter.origin), "with meshes",selectedCharacter.characterMesh.length);
 
 			//up until now, this was used temporarily, but now it needs to be populated with a final chosen character
 			Main.playerParty.members.splice(0,1);

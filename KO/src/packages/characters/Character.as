@@ -56,14 +56,14 @@ package packages.characters
 		public var animatorRace:SkeletonAnimator;
 		public var cells:Vector.<Cell> = new Vector.<Cell>();
 
-		public var activeRotation:Vector3D = new Vector3D;
-		public var updateVector:Vector3D = new Vector3D;
-		public var destinationVector:Vector3D = new Vector3D;
-		public var routeVector:Vector3D = new Vector3D;
-		public var ratioVector:Vector3D = new Vector3D;
-		public var startVector:Vector3D = new Vector3D;
+		public var updateVector:Vector3D = new Vector3D;//per frame Delta coordinates to be used as addition to the current coordinates during the move
+		public var destinationVector:Vector3D = new Vector3D;//destination coordinates for a move
+		public var routeVector:Vector3D = new Vector3D;//current coordinates during the move
+		public var ratioVector:Vector3D = new Vector3D;//used to store the 3-D ratios  of the 3 axis
+		public var proxyVector:Vector3D = new Vector3D;//used to position the character in the proximity of its current target position
+		public var adjustVector:Vector3D = new Vector3D;
 		
-		public var currentTarget:Character;
+		public var targetCharacter:Character;
 		
 		//Weapons
 		public var weaponMesh:Mesh;
@@ -86,8 +86,9 @@ package packages.characters
 				//trace(Classes.classString( classes), talents.length);
 				initializeSkills();
 				
+				//not really needed, if the actions array is empty will fall back on IDLE ANIMATION, just in case
 				//set the default action to IDLE
-				actions.push(Action.IDLE);
+				//actions.push(Action.IDLE);
 			}
 			return;
 		}

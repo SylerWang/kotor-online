@@ -5,6 +5,7 @@ package packages.map
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
+	import packages.characters.Action;
 	import packages.characters.Character;
 	
     public class Map extends Object
@@ -83,10 +84,11 @@ package packages.map
 			{
 				//reached the destination from the MOVE action, so time to prepare for the next queued action
 				character.actions.shift();
+				if( character.actions.length > 0)
+					trace( "current action to take is",Action.actionString(character.actions[0]));
 				character.ratioVector = new Vector3D;
-				character.startVector = character.characterClass.position;
-				
-				//trace( "finished moving",character.startVector);
+				Main.O2D.point = new Point;
+				//trace( "finished moving",character.routeVector);
 			}
 			
 			function moveAlongRoute(destinationVector:Vector3D,  middleVector:Vector3D, speed:Number):Vector3D
@@ -97,25 +99,17 @@ package packages.map
 				}
 				
 				//this approach might be a hack
-				var deltaX: Point = new Point(destinationVector.x - middleVector.x,0);
-				var deltaY: Point = new Point(destinationVector.y - middleVector.y,0);
-				var deltaZ: Point = new Point(destinationVector.z - middleVector.z,0);
-				
-				var max: Number = Math.max(Math.abs(deltaX.x),Math.abs(deltaY.x),Math.abs(deltaZ.x));
-				
+				var max: Number = Math.max(Math.abs(destinationVector.x - middleVector.x),Math.abs(destinationVector.y - middleVector.y),Math.abs(destinationVector.z - middleVector.z));
+
 				if(character.ratioVector.x == 0 && character.ratioVector.y == 0 && character.ratioVector.z == 0)
 				{
-					character.ratioVector.x = Math.abs(destinationVector.x - character.startVector.x)/max;
-					character.ratioVector.y = Math.abs(destinationVector.y - character.startVector.y)/max;
-					character.ratioVector.z = Math.abs(destinationVector.z - character.startVector.z)/max;
-					//trace( ratioX, ratioY, ratioZ,deltaX,deltaY,deltaZ);
+					character.ratioVector.x = (destinationVector.x - character.routeVector.x)/max;
+					character.ratioVector.y = (destinationVector.y - character.routeVector.y)/max;
+					character.ratioVector.z = (destinationVector.z - character.routeVector.z)/max;
+					//trace(middleVector.subtract(destinationVector));
 				}
 				
-				deltaX.normalize(speed*character.ratioVector.x);
-				deltaY.normalize(speed*character.ratioVector.y);
-				deltaZ.normalize(speed*character.ratioVector.z);
-				
-				character.updateVector = middleVector.add(new Vector3D(deltaX.x,deltaY.x,deltaZ.x));
+				character.updateVector = middleVector.add(new Vector3D(character.ratioVector.x*speed,character.ratioVector.y*speed,character.ratioVector.z*speed));
 				
 				//the following is needed to make sure that eventually the character.update vector will have the exact values with the destination vector, so that the zero vector condition becomes true and the move action stops
 				if ( middleVector.x < destinationVector.x) 

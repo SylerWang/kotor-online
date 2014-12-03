@@ -49,12 +49,13 @@ package packages.map
 					var _x: Number = -Grid.cellAt(cell.gridC, cell.gridR).x;
 					var _y: Number = -Grid.cellAt(cell.gridC, cell.gridR).y;
 					
-					selectedCharacter.startVector = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
+					selectedCharacter.routeVector = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
 					for( var m:int=0;m<selectedCharacter.characterMesh.length;m++)
 					{
-						selectedCharacter.characterMesh[m].position = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz); 
+						selectedCharacter.characterMesh[m].position = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
+						selectedCharacter.characterMesh[m].position = selectedCharacter.characterMesh[m].position.add(selectedCharacter.adjustVector);
 					}
-					Main.away3dView.camera.position = selectedCharacter.startVector.add(Main.cameraDelta);
+					Main.away3dView.camera.position = selectedCharacter.routeVector.add(Main.cameraDelta);
 				}
 				else
 				{
@@ -62,6 +63,16 @@ package packages.map
 					character.cells.push(cell);
 					if( character.avatar == null)	var avatar: Avatar = new Avatar( character, true);
 					avatar.setAvatar(character);
+					
+					//adjust position
+					var adjustment:int;
+					if(character.gender == Gender.FEMALE || character.gender == Gender.MALE)
+					{
+						adjustment = Main.MAP3D.adjust(Gender.genderString(selectedCharacter.gender));
+						character.adjustVector = new Vector3D(0,adjustment*Main.MAP3D.say,-adjustment*Main.MAP3D.caz);
+					}
+					//TO DO get the adjustment when the character is not female or male humanoid
+					
 					//Main.MAP.allCharacters[cell.encounterID] = character;
 					Main.MAP.allCharacters.push(character);
 				}
@@ -87,15 +98,19 @@ package packages.map
 				character.cells.splice(0,1);
 				character.cells.push(cell);
 				
-				character.startVector = new Vector3D(-character.cells[0].x,-character.cells[0].y*Main.MAP3D.say,character.cells[0].y*Main.MAP3D.caz);
+				character.routeVector = new Vector3D(-character.cells[0].x,-character.cells[0].y*Main.MAP3D.say,character.cells[0].y*Main.MAP3D.caz);
+				character.routeVector = character.routeVector.add(character.adjustVector);
 				
 				//startCell(cell);
-				for( var m:int=0;m< character.characterMesh.length;m++)
+				if(character.selected == false)
 				{
-					//vector has to be -X,-Y,0 format
-					character.characterMesh[m].position = new Vector3D(-character.cells[0].x,-character.cells[0].y*Main.MAP3D.say,character.cells[0].y*Main.MAP3D.caz);
-					character.characterMesh[m].rotation = new Vector3D(0,45,0);
-					//trace(cell.encounterID,character.characterName,new Vector3D(cell.gridC*Main.cellSize,cell.gridR*Main.cellSize,0));
+					for( var m:int=0;m< character.characterMesh.length;m++)
+					{
+						//vector has to be -X,-Y,0 format
+						character.characterMesh[m].position = character.routeVector;
+						character.characterMesh[m].rotation = new Vector3D(0,45,0);
+						//trace(cell.encounterID,character.characterName,new Vector3D(cell.gridC*Main.cellSize,cell.gridR*Main.cellSize,0));
+					}
 				}
 			}
 		}

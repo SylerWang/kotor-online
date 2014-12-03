@@ -6,6 +6,7 @@ package packages.characters
 	import away3d.core.pick.PickingType;
 	import away3d.entities.Mesh;
 	import away3d.events.*;
+	import away3d.tools.utils.Bounds;
 	
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
@@ -22,6 +23,7 @@ package packages.characters
 		private var currentCharacter:Character;
 		private var selectedCharacter:Character;
 		private var sea3dMesh:SEA3D;
+		public var over: Boolean = false;
 		
 		public function Avatar(character:Character, hasAvatar: Boolean = false)
 		{
@@ -31,6 +33,8 @@ package packages.characters
 		}
 		
 		//important function, here are actions being assigned
+		//TO DO.. Do I need to click listener here, maybe  for tablets, not for browsers on desktops
+		//assuming that I can handle the click on avatar extrapolating in the main class as part of click on stage function?
 		private function onMouseClick( event:MouseEvent3D): void
 		{
 			if(Main.gameState)
@@ -40,9 +44,18 @@ package packages.characters
 				{
 					selectedCharacter = Main.selectedCharacter;
 					//trace( "avatar 3-D mouse click.");
-					selectedCharacter.currentTarget = charRef;
-					if( selectedCharacter.actions[0] != Action.MOVE)
-						selectedCharacter.actions.unshift(Action.MOVE);
+					selectedCharacter.targetCharacter = charRef;
+					selectedCharacter.destinationVector = selectedCharacter.targetCharacter.routeVector;
+					Main.MOVEONMAP.moving(selectedCharacter);
+					
+					if(charRef.dialog != -1)
+						selectedCharacter.actions.unshift(Action.DIALOG);
+					
+					if (Main.MAP3D.zeroVector.equals(selectedCharacter.targetCharacter.routeVector.subtract(selectedCharacter.routeVector)) == false)
+					{
+						if( selectedCharacter.actions[0] != Action.MOVE)
+							selectedCharacter.actions.unshift(Action.MOVE);
+					}
 				}
 				/*else if(charRef.dialog != -1)	
 				{
@@ -60,6 +73,7 @@ package packages.characters
 		{
 			if(Main.gameState)
 			{
+				if(over == false)	 over = true;
 				Main.O2D.displayName(charRef);
 			}
 		}
@@ -68,6 +82,7 @@ package packages.characters
 		{
 			if(Main.gameState)
 			{
+				if(over == true)	 over = false;
 				Main.O2D.removeSprites();
 			}
 		}
@@ -272,6 +287,17 @@ package packages.characters
 					}
 				}
 			}
+		}
+		
+		public function getBounds( character: Character):Vector3D
+		{
+			Bounds.getObjectContainerBounds(character.characterClass);
+			var _w: Number=Bounds.width;
+			var _d: Number=Bounds.depth;
+			var _h: Number=Bounds.height;
+			//character.characterClass.showBounds = true;
+			//trace(_w, _d, _h);
+			return new Vector3D(_w,_d,_h);
 		}
 	}
 }

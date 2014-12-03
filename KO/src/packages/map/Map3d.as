@@ -94,5 +94,21 @@ package packages.map
 			Main.away3dView.scene.addChild(Main.mapTilesPath);
 			Main.pathTilesListeners();
 		}
+		
+		public function adjust( string: String):int
+		{
+			switch( string)
+			{
+				case "f"://if female humanoid
+				{
+					return 64;
+				}
+				case "m"://if male humanoid
+				{
+					return 72;
+				}
+			}
+			return 0;
+		}
 	}
 }

@@ -4,6 +4,7 @@ package
     import feathers.controls.Button;
     
     import flash.geom.Matrix;
+    import flash.geom.Point;
     
     import packages.characters.Character;
     
@@ -18,6 +19,8 @@ package
     
     public class O2d extends Object
     {
+		public var point:Point = new Point;
+		
 		public function O2d()
 		{
 			return;

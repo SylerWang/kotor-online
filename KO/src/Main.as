@@ -148,7 +148,7 @@ package
 		private var imageMapCounter:int = -1;
 		public static var mapGrids: Array = new Array;
 		//public static var currentMapCharacters: Array = new Array;
-		//public static var currentConversationOwner:Character;
+		//public static var currentConversationOwner:Character;//TO DO. Unfortunately conversations/dialogues are currently statically assigned
 		
 		//Pre-loader resources
 		_loaderImagesVector[0] = "ui/welcome/kr_logo.jxr";
@@ -657,7 +657,7 @@ package
 				starlingFront.nextFrame();
 			}
 			else if(introState)			starlingIntro.nextFrame();
-			else  trace( "no defined state");
+			else  trace( "no defined state");//this should never happen
 		}
 
 		//TO DO what a hack this is, I need to learn how to make it better. :-)
@@ -679,6 +679,7 @@ package
 		
 		private function onMouse3DClick( event:MouseEvent3D): void
 		{
+			//TO DO currently destination vector is extrapolated from mouse coordinates on the  2-D stage, maybe we don't need them at all
 			var material:TextureMaterial = ((event.currentTarget as Mesh).material as TextureMaterial);
 			var texture:BitmapTexture = material.texture as BitmapTexture;
 			var bitmapData:BitmapData = texture.bitmapData;
@@ -692,7 +693,27 @@ package
 				for each( var partyMember: Character in playerParty.members)
 				{
 					if(partyMember.selected == true)
-						partyMember.actions.unshift(Action.MOVE);
+					{
+						if (!suspendState)
+						{
+							//clear the target character and  actions queue
+							if(partyMember.targetCharacter != null)
+								partyMember.targetCharacter = null;
+							partyMember.actions = [];
+							
+							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
+							var middle: Vector3D = partyMember.characterClass.position;
+							var relativeX: Number = (APP_WIDTH/2 - O2D.point.x) + middle.x;
+							var relativeY: Number = (APP_HEIGHT/2 - O2D.point.y) * MAP3D.say + middle.y;
+							var relativeZ: Number = -(APP_HEIGHT/2 - O2D.point.y) * MAP3D.caz + middle.z;
+							var destination: Vector3D = new Vector3D(relativeX, relativeY, relativeZ);
+							
+							partyMember.destinationVector = destination;
+							MOVEONMAP.moving(partyMember);
+							
+							partyMember.actions.unshift(Action.MOVE);
+						}
+					}
 				}
 			}
 			//trace( "main 3-D click on tiles");
@@ -703,25 +724,7 @@ package
 			if (gameState == true)
 			{
 				//trace( "2-D click on stage.");
-				//check against only selected party member
-				for each( var partyMember: Character in playerParty.members)
-				{
-					if(partyMember.selected == true)
-					{
-						if (!suspendState)// && activePlayerCharacter.currentTarget == null)
-						{
-							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
-							var middle: Vector3D = partyMember.characterClass.position;
-							var relativeX: Number = (APP_WIDTH/2 - event.stageX) + middle.x;
-							var relativeY: Number = (APP_HEIGHT/2 - event.stageY) * MAP3D.say + middle.y;
-							var relativeZ: Number = -(APP_HEIGHT/2 - event.stageY) * MAP3D.caz + middle.z;
-							var destination: Vector3D = new Vector3D(relativeX, relativeY, relativeZ);
-							//trace("destination", destination);
-							
-							MOVEONMAP.moving(destination, partyMember);
-						}
-					}
-				}
+				O2D.point = new Point( event.stageX, event.stageY);
 			}
 		}
 		

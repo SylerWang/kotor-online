@@ -3,7 +3,7 @@ package packages.characters
 	public class Action extends Object
 	{
 		public static const UNDEFINED:int=0;
-		public static const IDLE:int=1;
+		public static const IDLE:int=1;//not really needed, if the actions array is empty will fall back on IDLE ANIMATION, just in case
 		public static const MOVE:int=2;
 		public static const ATTACK:int=11;
 		public static const RANGE:int=12;
@@ -14,7 +14,7 @@ package packages.characters
 			return;
 		}
 		
-		/*// TO DO maybe not needed
+		// TO DO maybe not needed
 		public static function actionString( value:int): String
 		{
 			switch( value)
@@ -63,6 +63,6 @@ package packages.characters
 				}
 			}
 			return UNDEFINED;
-		}*/
+		}
 	}
 }

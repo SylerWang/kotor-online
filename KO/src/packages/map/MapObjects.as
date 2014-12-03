@@ -19,13 +19,13 @@ package packages.map
 				{
 					var cell:Cell = new Cell(0,0);
 					cell.gridC=38;
-					cell.gridR=99;
+					cell.gridR=101;
 					cell.encounterID=0;
 					cells.push(cell);
 					
 					cell = new Cell(0,0);
 					cell.gridC=56;
-					cell.gridR=102;
+					cell.gridR=104;
 					cell.encounterID=1;
 					cells.push(cell);
 					

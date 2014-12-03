@@ -1,3 +1,5 @@
+//TO DO currently The dialogue is a statically assigned, it needs to be dynamically evaluated based on dialogue ID from the character/NPC
+//also consider adding a banter feature. :-)
 package packages.dialog
 {
 	import flash.events.Event;
@@ -243,7 +245,7 @@ package packages.dialog
 			//handle the active text by calling a function
 			//this is the first entry, and belongs to an NPC-is this needed Here?
 			var selectedCharacter: Character = Main.selectedCharacter;
-			activeText(selectedCharacter.currentTarget.characterName);
+			activeText(selectedCharacter.targetCharacter.characterName);
 			
 			//handle entry Replies
 			for(var j:int=0;j<entryListRepliesArray[c].length;j++)

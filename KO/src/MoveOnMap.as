@@ -56,7 +56,7 @@ package
 		//if character current action is MOVE
 		public function updatingMapPosition(character: Character): void
 		{
-			Main.MAP.updateMapLocation(character);//this updates temp Point per frame
+			Main.MAP.updateMapLocation(character);//this updates the moving characters position per frame
 			
 			if (character.actions[0] == Action.MOVE && Main.suspendState != true)
 			{
@@ -66,9 +66,10 @@ package
 				{
 					character.characterMesh[m].position =  character.routeVector;
 				}
-				
+
+				//make sure the camera follows only the selected character and all the 3-D operations are applied for correct position of the camera
 				if(character.selected == true)
-					Main.away3dView.camera.position = character.routeVector.add(Main.cameraDelta);
+					Main.away3dView.camera.position = (character.routeVector.add(Main.cameraDelta)).subtract(character.adjustVector);
 				
 				/*//moving the NPC
 				//TO DO updating  cell for player party as well
@@ -91,16 +92,12 @@ package
 			}
 		}
 
-		public function moving(destination: Vector3D, character: Character):void
+		public function moving(character: Character):void
 		{
-			//setting source and destination vectors
-			character.routeVector = character.startVector;
-			character.destinationVector = destination;
-			
 			//var rotationRad:Number = Math.atan2(target.z - char.z, mouseX - target.x) ;
 			//char.rotationY = rotationRad * (180 / Math.PI); // (180 / Math.PI) = radians to degrees
 			
-			var rotationRad:Number = Math.atan2(destination.z - character.routeVector.z, Math.abs(destination.x) - Math.abs(character.routeVector.x));
+			var rotationRad:Number = Math.atan2(character.destinationVector.z - character.routeVector.z, Math.abs(character.destinationVector.x) - Math.abs(character.routeVector.x));
 			
 			//trace(rotationRad);
 			//TO DO to fix party member rotation
