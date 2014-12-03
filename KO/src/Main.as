@@ -702,14 +702,7 @@ package
 							partyMember.actions = [];
 							
 							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
-							var middle: Vector3D = partyMember.characterClass.position;
-							var relativeX: Number = (APP_WIDTH/2 - O2D.point.x) + middle.x;
-							var relativeY: Number = (APP_HEIGHT/2 - O2D.point.y) * MAP3D.say + middle.y;
-							var relativeZ: Number = -(APP_HEIGHT/2 - O2D.point.y) * MAP3D.caz + middle.z;
-							var destination: Vector3D = new Vector3D(relativeX, relativeY, relativeZ);
-							
-							partyMember.destinationVector = destination;
-							MOVEONMAP.moving(partyMember);
+							partyMember.destinationVector = O2D.c2D3D();
 							
 							partyMember.actions.unshift(Action.MOVE);
 						}

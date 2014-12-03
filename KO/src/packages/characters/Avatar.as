@@ -23,7 +23,6 @@ package packages.characters
 		private var currentCharacter:Character;
 		private var selectedCharacter:Character;
 		private var sea3dMesh:SEA3D;
-		public var over: Boolean = false;
 		
 		public function Avatar(character:Character, hasAvatar: Boolean = false)
 		{
@@ -46,7 +45,6 @@ package packages.characters
 					//trace( "avatar 3-D mouse click.");
 					selectedCharacter.targetCharacter = charRef;
 					selectedCharacter.destinationVector = selectedCharacter.targetCharacter.routeVector;
-					Main.MOVEONMAP.moving(selectedCharacter);
 					
 					if(charRef.dialog != -1)
 						selectedCharacter.actions.unshift(Action.DIALOG);
@@ -73,7 +71,6 @@ package packages.characters
 		{
 			if(Main.gameState)
 			{
-				if(over == false)	 over = true;
 				Main.O2D.displayName(charRef);
 			}
 		}
@@ -82,7 +79,6 @@ package packages.characters
 		{
 			if(Main.gameState)
 			{
-				if(over == true)	 over = false;
 				Main.O2D.removeSprites();
 			}
 		}

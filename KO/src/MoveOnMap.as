@@ -62,11 +62,15 @@ package
 			{
 				//starling map Sprite not needed anymore, remove all its references
 				
+				var rotationRad:Number = Math.atan2(character.destinationVector.z - character.routeVector.z, Math.abs(character.destinationVector.x) - Math.abs(character.routeVector.x));
 				for( var m:int=0;m<character.characterMesh.length;m++)
 				{
 					character.characterMesh[m].position =  character.routeVector;
+					//the following condition is needed to make sure rotation doesn't apply when roused and destination vectors are equal, otherwise the rotation jumps to coordinates zero, and looks weird. :-)
+					if (Main.MAP3D.zeroVector.equals(character.destinationVector.subtract(character.routeVector)) == false)
+						character.characterMesh[m].rotationY = rotationRad * (180 / Math.PI) - 90;
 				}
-
+				
 				//make sure the camera follows only the selected character and all the 3-D operations are applied for correct position of the camera
 				if(character.selected == true)
 					Main.away3dView.camera.position = (character.routeVector.add(Main.cameraDelta)).subtract(character.adjustVector);
@@ -92,20 +96,14 @@ package
 			}
 		}
 
-		public function moving(character: Character):void
+		public function moving1(character: Character):void//not needed
 		{
 			//var rotationRad:Number = Math.atan2(target.z - char.z, mouseX - target.x) ;
 			//char.rotationY = rotationRad * (180 / Math.PI); // (180 / Math.PI) = radians to degrees
 			
-			var rotationRad:Number = Math.atan2(character.destinationVector.z - character.routeVector.z, Math.abs(character.destinationVector.x) - Math.abs(character.routeVector.x));
 			
 			//trace(rotationRad);
 			//TO DO to fix party member rotation
-			
-			for( var m:int=0;m<character.characterMesh.length;m++)
-			{
-				character.characterMesh[m].rotationY = rotationRad * (180 / Math.PI) - 90;
-			}
 			
 			//findPath();//TO DO, this broke when map tiles are now 3-D
 			

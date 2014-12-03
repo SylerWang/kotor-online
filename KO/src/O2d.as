@@ -1,10 +1,13 @@
 // TO DO Generalize  mouse word usage, maybe get mesh bounds as well
 package
 {
+    import away3d.tools.utils.Bounds;
+    
     import feathers.controls.Button;
     
     import flash.geom.Matrix;
     import flash.geom.Point;
+    import flash.geom.Vector3D;
     
     import packages.characters.Character;
     
@@ -52,19 +55,19 @@ package
 			var _text:TextField = new TextField(_textWidth,_textHeight,character.characterName, "Helvetica", _textSize, 0xddcba2);
 			var _image:Image = new Image(Main.O2D.gradient(_textWidth,_textHeight));
 			var _sprite:Sprite = new Sprite;
+			
 			_sprite.name = "displayName";
 			_sprite.addChild(_image);
 			_sprite.addChild(_text);
-			if( character.characterName == "Boske Tar")		
-			{
-				_sprite.x = Main.APP_WIDTH/2 - _textWidth/2;
-				_sprite.y = Main.APP_HEIGHT/2 - 100;
-			}
-			else
-			{
-				_sprite.x = character.cells[0].x - _textWidth/2;
-				_sprite.y = character.cells[0].y - 90;
-			}
+			
+			Bounds.getObjectContainerBounds(character.characterClass);
+			var _h:int=Math.round(Bounds.height);
+			
+			var p: Point = c3D2D( character.routeVector);
+			
+			_sprite.x = p.x - _textWidth/2;
+			_sprite.y = p.y - _h;
+			
 			StarlingFrontSprite.getInstance().addChild(_sprite);
 			if( character.dialog != -1)		 displayDialog( character);
 			//trace("OVER", character.characterName, character.cells[0].gridC, character.cells[0].gridR,_sprite.x,_sprite.y);			
@@ -74,11 +77,21 @@ package
 		{
 			var _iDialog:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("dialog_icon"));
 			_iDialog.width = _iDialog.height = 32;
+			
 			var _sprite:Sprite = new Sprite;
 			_sprite.name = "displayDialog";
 			_sprite.addChild(_iDialog);
-			_sprite.x = character.cells[0].x - _iDialog.width/2;
-			_sprite.y = character.cells[0].y - 90 - _iDialog.height;
+			
+			Bounds.getObjectContainerBounds(character.characterClass);
+			var _h:int=Math.round(Bounds.height);
+			
+			var p: Point = c3D2D( character.routeVector);
+			
+			//_sprite.x = character.cells[0].x - _iDialog.width/2;
+			//_sprite.y = character.cells[0].y - 90 - _iDialog.height;
+			_sprite.x = p.x - _iDialog.width/2;
+			_sprite.y = p.y - _h - _iDialog.height;
+			
 			StarlingFrontSprite.getInstance().addChild(_sprite);
 		}
 		
@@ -166,6 +179,46 @@ package
 			_sprite.addChild(_image);
 			_sprite.addChild(_text);
 			StarlingFrontSprite.getInstance().addChild(_sprite);
+		}
+		
+		//convert 2-D point to 3-D coordinates
+		public function c2D3D(p:Point=null,v:Vector3D=null):Vector3D
+		{
+			if(p == null)	p=point;
+			if(v == null)
+			{
+				for each( var partyMember: Character in Main.playerParty.members)
+				{
+					if(partyMember.selected == true)
+					{
+						v = partyMember.characterClass.position;
+					}
+				}
+			}
+			
+			var relativeX: Number = (Main.APP_WIDTH/2 - p.x) + v.x;
+			var relativeY: Number = (Main.APP_HEIGHT/2 - p.y) * Main.MAP3D.say + v.y;
+			var relativeZ: Number = -(Main.APP_HEIGHT/2 - p.y) * Main.MAP3D.caz + v.z;
+			var vector3d: Vector3D = new Vector3D(relativeX, relativeY, relativeZ);
+			return vector3d;
+		}
+		
+		//convert 3-D coordinates to 2-D point
+		public function c3D2D(v:Vector3D):Point
+		{
+			var p: Point = new Point;
+			var middle: Vector3D = new Vector3D;
+			for each( var partyMember: Character in Main.playerParty.members)
+			{
+				if(partyMember.selected == true)
+				{
+					middle = partyMember.characterClass.position;
+				}
+			}
+			var _x: int = Math.round(-(v.x - middle.x - Main.APP_WIDTH/2));
+			var _y: int = Math.round(-((v.y - middle.y - Main.APP_HEIGHT/2*Main.MAP3D.say)/Main.MAP3D.say));
+			p = new Point(_x,_y);
+			return p;
 		}
 	}
 }
