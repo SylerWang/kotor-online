@@ -1,9 +1,6 @@
-package com.rocketmandevelopment.grid {
-	import com.rocketmandevelopment.math.Vector2D;
-	
-	import flash.display.Graphics;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
+package com.rocketmandevelopment.grid 
+{
+	import flash.geom.Vector3D;
 	
 	public class Cell {
 		public var f:Number = 0;
@@ -13,12 +10,30 @@ package com.rocketmandevelopment.grid {
 		public var isStart:Boolean = false;
 		public var isOpen:Boolean = false;
 		public var isWalkable:Boolean = true;
+		
 		public var encounterID:int = -1;
 		
 		public var gridC:int;
 		public var gridR:int;
 		
 		private var _neighbors:Array;
+		public var parent:Cell;
+		public var possibleActions:Array = [];
+		public var visited:Boolean = false;
+		
+		public function Cell(x:int, y:int, z:int) {
+			_x = x;
+			_y = y;
+			_z = z;
+		}
+		
+		public function get position():Vector3D {
+			return new Vector3D(_x, _y, _z);
+		}
+		
+		public function get rotation():Vector3D {
+			return new Vector3D(-Main.away3dView.camera.rotationX,-Main.away3dView.camera.rotationY,-Main.away3dView.camera.rotationZ);
+		}
 		
 		public function get neighbors():Array {
 			if(!_neighbors) {
@@ -42,15 +57,6 @@ package com.rocketmandevelopment.grid {
 			return _neighbors;
 		}
 		
-		public var parent:Cell;
-		
-		public function get position():Vector2D {
-			return new Vector2D(_x, _y);
-		}
-		
-		public var possibleActions:Array = [];
-		public var visited:Boolean = false;
-		
 		/**
 		 * setting and getting x and y
 		 **/
@@ -73,9 +79,14 @@ package com.rocketmandevelopment.grid {
 			return _y;
 		}
 		
-		public function Cell(x:int, y:int) {
-			_x = x;
-			_y = y;
+		private var _z:int;
+		
+		public function set z(value:int):void {
+			_z = value;
+		}
+		
+		public function get z():int {
+			return _z;
 		}
 		
 		public function clear():void {
@@ -88,13 +99,13 @@ package com.rocketmandevelopment.grid {
 			isWalkable = true;
 		}
 		
-		public function draw(g:Graphics, w:Number, h:Number):void {
+		/*public function draw(g:Graphics, w:Number, h:Number):void {
 			if(!isWalkable) {
 				g.beginFill(0x000088);
 			}
 			g.drawRect(_x * w, _y * h, w, h);
 			g.endFill();
-		}
+		}*/
 		
 		public function reset():void {
 			f = 0;
@@ -106,7 +117,7 @@ package com.rocketmandevelopment.grid {
 		}
 		
 		public function toString():String {
-			return "Cell(x: " + _x + " y: " + _y + ")"; // " f: "+ f +" g: "+g+" h: "+h + ")";
+			return "Cell(x: " + _x + " y: " + _y + " z: " + _z + ")"; // " f: "+ f +" g: "+g+" h: "+h + ")";
 		}
 	}
 }

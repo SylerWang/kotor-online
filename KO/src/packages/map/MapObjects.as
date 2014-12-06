@@ -17,15 +17,15 @@ package packages.map
 				case 1:
 				default:
 				{
-					var cell:Cell = new Cell(0,0);
-					cell.gridC=38;
-					cell.gridR=101;
+					var cell:Cell = new Cell(0,0,0);
+					cell.gridC=25;
+					cell.gridR=10;
 					cell.encounterID=0;
 					cells.push(cell);
 					
-					cell = new Cell(0,0);
-					cell.gridC=56;
-					cell.gridR=104;
+					cell = new Cell(0,0,0);
+					cell.gridC=43;
+					cell.gridR=15;
 					cell.encounterID=1;
 					cells.push(cell);
 					

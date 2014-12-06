@@ -33,9 +33,14 @@ package packages.map
 
 		public function populateMap(): void
 		{
+			//create the grid,  the cells  in the grid have 3-D coordinates, but the grid basically is one plane at an angle, with no depth
 			Grid.createGrid(128,128);
+			
+			//get the statically assigned objects for the current map
+			//TO DO programmatically create objects on map
 			var cells: Array = MapObjects.getMapObjects(Main.MAP.mapID);
 			trace( "map",Main.MAP.mapID, "has",  cells.length, "special cells");
+			
 			for each (var cell:Cell in cells)
 			{
 				//trace( "encounter ID",  cell.encounterID);
@@ -45,17 +50,6 @@ package packages.map
 					var selectedCharacter: Character = Main.selectedCharacter;
 					//selectedCharacter.cells.splice(0,1);
 					selectedCharacter.cells.push(cell);
-					
-					var _x: Number = -Grid.cellAt(cell.gridC, cell.gridR).x;
-					var _y: Number = -Grid.cellAt(cell.gridC, cell.gridR).y;
-					
-					selectedCharacter.routeVector = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
-					for( var m:int=0;m<selectedCharacter.characterMesh.length;m++)
-					{
-						selectedCharacter.characterMesh[m].position = new Vector3D(_x,_y*Main.MAP3D.say,-_y*Main.MAP3D.caz);
-						selectedCharacter.characterMesh[m].position = selectedCharacter.characterMesh[m].position.add(selectedCharacter.adjustVector);
-					}
-					Main.away3dView.camera.position = selectedCharacter.routeVector.add(Main.cameraDelta);
 				}
 				else
 				{
@@ -63,15 +57,6 @@ package packages.map
 					character.cells.push(cell);
 					if( character.avatar == null)	var avatar: Avatar = new Avatar( character, true);
 					avatar.setAvatar(character);
-					
-					//adjust position
-					var adjustment:int;
-					if(character.gender == Gender.FEMALE || character.gender == Gender.MALE)
-					{
-						adjustment = Main.MAP3D.adjust(Gender.genderString(selectedCharacter.gender));
-						character.adjustVector = new Vector3D(0,adjustment*Main.MAP3D.say,-adjustment*Main.MAP3D.caz);
-					}
-					//TO DO get the adjustment when the character is not female or male humanoid
 					
 					//Main.MAP.allCharacters[cell.encounterID] = character;
 					Main.MAP.allCharacters.push(character);
@@ -91,26 +76,25 @@ package packages.map
 			for each (var character: Character in Main.MAP.allCharacters)
 			{
 				var cell: Cell = character.cells[0];
-				//trace( "before", character.cells[0].x,character.cells[0].y);
-				cell.x = Main.mapGrids[Main.MAP.mapID].grid[cell.gridC][cell.gridR].x;
-				cell.y = Main.mapGrids[Main.MAP.mapID].grid[cell.gridC][cell.gridR].y;
-				//TO DO maybe there's a better way
-				character.cells.splice(0,1);
-				character.cells.push(cell);
-				
-				character.routeVector = new Vector3D(-character.cells[0].x,-character.cells[0].y*Main.MAP3D.say,character.cells[0].y*Main.MAP3D.caz);
-				character.routeVector = character.routeVector.add(character.adjustVector);
+
+				character.routeVector = Grid.cellAt(cell.gridC, cell.gridR).position;
 				
 				//startCell(cell);
 				if(character.selected == false)
 				{
 					for( var m:int=0;m< character.characterMesh.length;m++)
 					{
-						//vector has to be -X,-Y,0 format
 						character.characterMesh[m].position = character.routeVector;
 						character.characterMesh[m].rotation = new Vector3D(0,45,0);
-						//trace(cell.encounterID,character.characterName,new Vector3D(cell.gridC*Main.cellSize,cell.gridR*Main.cellSize,0));
 					}
+				}
+				else//this is the selected character, so the camera is positioned relative to its position
+				{
+					for(m=0;m<character.characterMesh.length;m++)
+					{
+						character.characterMesh[m].position = character.routeVector;
+					}
+					Main.away3dView.camera.position = character.routeVector.add(Main.cameraDelta).subtract(Main.MAP3D.adjustCamera);
 				}
 			}
 		}

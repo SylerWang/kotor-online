@@ -1,6 +1,6 @@
-package com.rocketmandevelopment.grid {
+package com.rocketmandevelopment.grid 
+{
 	import com.rocketmandevelopment.grid.Cell;
-	import com.rocketmandevelopment.math.Vector2D;
 	
 	public class AStar {
 		public static var heuristic:Function = manhattan;
@@ -8,9 +8,9 @@ package com.rocketmandevelopment.grid {
 		public function AStar() {
 		}
 		
-		public static function aStar(start:Vector2D, end:Vector2D):Array {
+		public static function aStar(start:Cell, end:Cell):Array {
 			Grid.reset();
-			var open:Array = [Grid.cellAt(start.x, start.y)];
+			var open:Array = [Grid.cellAt(start.gridC, start.gridR)];
 			open[0].isOpen = true;
 			var closed:Array = [];
 			var currentCell:Cell;
@@ -21,7 +21,7 @@ package com.rocketmandevelopment.grid {
 					break;
 				}
 				currentCell = getLowestF(open);
-				if(currentCell.gridC == end.x && currentCell.gridR == end.y) {
+				if(currentCell.gridC == end.gridC && currentCell.gridR == end.gridR) {
 					path = [currentCell];
 					while(true) {
 						path.push(currentCell.parent);
@@ -45,7 +45,7 @@ package com.rocketmandevelopment.grid {
 						open.push(n[i]);
 						n[i].isOpen = true;
 						if(isDiagonal(currentCell, n[i])) {
-							n[i].g = 1.4;
+							n[i].g = getDiagonalSqrt();
 						} else {
 							n[i].g = 1;
 						}
@@ -57,9 +57,9 @@ package com.rocketmandevelopment.grid {
 					} else {
 						var tg:Number;
 						if(isDiagonal(currentCell, n[i])) {
-							tg = 1.4;
+							tg = getDiagonalSqrt();
 						} else {
-							tg = 1
+							tg = 1;
 						}
 						tg += currentCell.g;
 						if(tg < n[i].g) {
@@ -71,11 +71,12 @@ package com.rocketmandevelopment.grid {
 					
 				}
 			}
-			Main.MAP.current.route = path;//set the map route
+			//is this still needed?
+			//Main.MAP.current.route = path;//set the map route
 			return path;
 		}
 		
-		public static function diagonal(current:Cell, end:Vector2D):Number {
+		public static function diagonal(current:Cell, end:Cell):Number {
 			var xDistance:int = Math.abs(current.x - end.x);
 			var yDistance:int = Math.abs(current.y - end.y);
 			if(xDistance > yDistance) {
@@ -86,20 +87,10 @@ package com.rocketmandevelopment.grid {
 			return 0;
 		}
 		
-		public static function manhattan(current:Cell, end:Vector2D):Number {
+		public static function manhattan(current:Cell, end:Cell):Number {
 			//return Math.abs(current.x - end.x) + Math.abs(current.y + end.y);
 			return Math.max(Math.abs(current.x - end.x), Math.abs( current.y - end.y));
 		}
-		
-		/*public static function diagonalShortcut( current: Cell, end: Vector2D): Number {
-			var xDist:int = Math.abs(currentCell.x-goalCell.x);
-			var yDist:int = Math.abs(currentCell.y-goalCell.y);
-			if(xDist > yDist){
-				H = 1.4*yDist + (xDist-yDist);
-			} else {
-				H = 1.4*xDist + (yDist-xDist);
-			}
-		}*/
 		
 		private static function getLowestF(list:Array):Cell {
 			list.sortOn("f", Array.NUMERIC | Array.DESCENDING);
@@ -111,6 +102,12 @@ package com.rocketmandevelopment.grid {
 				return true;
 			}
 			return false;
+		}
+		
+		private static function getDiagonalSqrt(): Number
+		{
+			var _y:int = Math.round(Main.cellSize*Main.MAP3D.say);
+			return Math.sqrt(1*1+_y/Main.cellSize*_y/Main.cellSize);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package packages.characters
 {
 	import away3d.animators.transitions.CrossfadeTransition;
+	import away3d.entities.Mesh;
 	
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;

@@ -8,6 +8,8 @@ package packages.characters
 	import away3d.events.*;
 	import away3d.tools.utils.Bounds;
 	
+	import com.rocketmandevelopment.grid.AStar;
+	
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
@@ -45,6 +47,19 @@ package packages.characters
 					//trace( "avatar 3-D mouse click.");
 					selectedCharacter.targetCharacter = charRef;
 					selectedCharacter.destinationVector = selectedCharacter.targetCharacter.routeVector;
+					
+					//remove previous path if any
+					Main.MAP3D.removePath();
+					
+					//calculate best path and if found display it
+					var bestPath: Array = AStar.aStar(selectedCharacter.cells[0], selectedCharacter.targetCharacter.cells[0]);
+					//trace( "best path length", bestPath.length);
+					//trace(selectedCharacter.routeVector,selectedCharacter.targetCharacter.routeVector);
+					if(bestPath != null && bestPath.length > 0)
+					{
+						var walk: Array = Main.MAP3D.getWalkable(bestPath);
+						//Main.MAP3D.showPath(bestPath);
+					}
 					
 					if(charRef.dialog != -1)
 						selectedCharacter.actions.unshift(Action.DIALOG);

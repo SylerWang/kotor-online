@@ -61,7 +61,6 @@ package packages.characters
 		public var routeVector:Vector3D = new Vector3D;//current coordinates during the move
 		public var ratioVector:Vector3D = new Vector3D;//used to store the 3-D ratios  of the 3 axis
 		public var proxyVector:Vector3D = new Vector3D;//used to position the character in the proximity of its current target position
-		public var adjustVector:Vector3D = new Vector3D;
 		
 		public var targetCharacter:Character;
 		

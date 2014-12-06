@@ -105,7 +105,6 @@ package
 		public static var abilitiesWindowPosition:Point = new Point;
 		
 		//various ratios and other things
-		public static var warp: Number;
 		public static var aspectRatio:Number;
 		public static var reverseAspectRatio:Number;
 		public static var keyState:Array = [];
@@ -640,12 +639,6 @@ package
 					MOVEONMAP.moving(activePlayerCharacter.endPoint.x,activePlayerCharacter.endPoint.y);
 				}*/
 				
-				/*for each(var partyMember: Character in playerParty.members)
-				{
-					if(partyMember.actions[0] == Action.MOVE)
-						MOVEONMAP.updatingMapPosition(partyMember);
-				}*/
-				
 				for each(var character: Character in Main.MAP.allCharacters)
 				{	
 					if(character.actions[0] == Action.MOVE)
@@ -684,6 +677,9 @@ package
 			var texture:BitmapTexture = material.texture as BitmapTexture;
 			var bitmapData:BitmapData = texture.bitmapData;
 
+			if((event.currentTarget as Mesh).name)
+				trace((event.currentTarget as Mesh).position);//,(event.currentTarget as Mesh).geometry.subGeometries[0].vertexPositionData);
+			
 			var _x:int = event.localPosition.x + 512;
 			var _y:int = - event.localPosition.z + 512;
 			//trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
@@ -814,7 +810,17 @@ package
 			{
 				partyMember = playerParty.members[i];
 				if(partyMember.selected = true)
-					 return partyMember;
+				{
+					//set the adjust camera position for future use
+					var adjustment:int;
+					if(partyMember.gender == Gender.FEMALE || partyMember.gender == Gender.MALE)
+					{
+						adjustment = Main.MAP3D.adjust(Gender.genderString(partyMember.gender));
+						Main.MAP3D.adjustCamera = new Vector3D(0,Math.round(adjustment*Main.MAP3D.say),-Math.round(adjustment*Main.MAP3D.caz));
+					}
+					//TO DO get the adjustment when the character is not female or male humanoid
+					return partyMember;
+				}
 			}
 			//if for some reason no party members are selected,then fall back on the member at index zero
 			return playerParty.members[0];//but this should never happen

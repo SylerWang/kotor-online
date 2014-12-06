@@ -5,7 +5,6 @@ package
 	import com.rocketmandevelopment.grid.AStar;
 	import com.rocketmandevelopment.grid.Cell;
 	import com.rocketmandevelopment.grid.Grid;
-	import com.rocketmandevelopment.math.Vector2D;
 	
 	import flash.display.MovieClip;
 	import flash.geom.Point;
@@ -22,13 +21,6 @@ package
 	
 	public class MoveOnMap extends MovieClip
     {
-		/*private var newX:Number;
-		private var newY:Number;
-		private var tempX:Number=0;
-		private var tempY:Number=0;*/
-		
-		private var sCell:Vector2D;
-		private var eCell:Vector2D;
 		private var startCell:Cell;
 		private var endCell:Cell;
 		
@@ -73,7 +65,7 @@ package
 				
 				//make sure the camera follows only the selected character and all the 3-D operations are applied for correct position of the camera
 				if(character.selected == true)
-					Main.away3dView.camera.position = (character.routeVector.add(Main.cameraDelta)).subtract(character.adjustVector);
+					Main.away3dView.camera.position = (character.routeVector.add(Main.cameraDelta)).subtract(Main.MAP3D.adjustCamera);
 				
 				/*//moving the NPC
 				//TO DO updating  cell for player party as well
@@ -135,11 +127,11 @@ package
 			//var gRows:*=Math.ceil(Main.gameStage.stageHeight/Main.cellSize);
 			//var gColumns:*=Math.ceil(Main.gameStage.stageWidth/Main.cellSize);
 			
-			if (sCell == null)		 
+			/*if (sCell == null)		 
 			{
 				//trace( "vector starting cell empty, setting it as",Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
 				//sCell = new Vector2D(Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
-			}
+			}*/
 			
 			var _grid:Grid = Main.currentGrid;
 			
@@ -162,7 +154,7 @@ package
 			
 			ArrayD.sortOn("temp", Array.NUMERIC);
 			//trace("destination is  vector",ArrayD[0].columns,ArrayD[0].rows);
-			eCell = new Vector2D(ArrayD[0].columns,ArrayD[0].rows);
+			//eCell = new Vector2D(ArrayD[0].columns,ArrayD[0].rows);
 			
 			//TEMP	 showing  best path
 			/*var _imageRed:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
@@ -176,7 +168,7 @@ package
 			cellSprite(ArrayD[0].columns,ArrayD[0].rows);
 			
 			//var _aStar:AStar =  new AStar();
-			var bestPath: Array = AStar.aStar( sCell, eCell);
+			var bestPath: Array = AStar.aStar(startCell, endCell);
 			//trace( bestPath.length);
 			//trace( "starting vector is", sCell, "		||		destination vector is",eCell, "		||		best path is", bestPath.length);
 			
