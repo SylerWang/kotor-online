@@ -1,8 +1,10 @@
 package packages.map
 {
 	import away3d.entities.Mesh;
+	import away3d.entities.SegmentSet;
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
+	import away3d.primitives.LineSegment;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.tools.utils.Ray;
@@ -80,7 +82,7 @@ package packages.map
 					material.alphaBlending = true;
 					tile = new Mesh(new PlaneGeometry(bitmap.width,bitmap.height), material );
 					tile.name = "p" + String(rows) + String(columns);
-					
+					//tile.showBounds = true;
 					tile.x = - columns * bitmap.width;
 					tile.y = - rows * dy;
 					tile.z = rows * dz;
@@ -105,38 +107,85 @@ package packages.map
 
 		public function getWalkable(astar: Array): Array
 		{
-			/*
-			LT	Vector3D(0, -1232, 1636)
-			LB	Vector3D(0, -1848, 2454)
-			RB	Vector3D(-1024, -1848, 2454)
-			
-			LT	Vector3D(0, -1232, 1636)
-			RT	Vector3D(-1024, -1232, 1636)
-			RB	Vector3D(-1024, -1848, 2454)
-			*/
-			var ray:Ray = new Ray();
+			var ray:Ray = new Ray;
 			for (var i:int=0;i<astar.length;i++)
 			{
 				var cell: Cell = astar[i];
-				var source: Vector3D = cell.position.subtract(new Vector3D(0,dy/2-Main.cellSize/4,dz/2-Main.cellSize/4));
+
+				//create  the corner vectors of the plane, this plane is the image for the path
+				var lt:Vector3D = new Vector3D;
+				var rb:Vector3D = new Vector3D;
+				var lb:Vector3D = new Vector3D;
+				var rt:Vector3D = new Vector3D;
+				
+				//this is temporary needed to hold the plane to get the material later on
+				var planes: Array = new Array;
+				
+				//check to see which planes is the cell supposed to intersect/be part of
+				//if found, then set its vector corners for future triangulation
 				for(var j:int=0;j<Main.mapTilesPath.numChildren;j++)
 				{
-					if(Math.abs(source.x) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.x) && 
-						Math.abs(source.x) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.x) + dim.x &&
-						Math.abs(source.y) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.y) && 
-						Math.abs(source.y) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.y) + dim.y &&
-						Math.abs(source.z) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.z) && 
-						Math.abs(source.z) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.z) + dim.z)
+					if(Math.abs(cell.x) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.x) && 
+						Math.abs(cell.x) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.x) + dim.x &&
+						Math.abs(cell.y) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.y) && 
+						Math.abs(cell.y) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.y) + dim.y &&
+						Math.abs(cell.z) > Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.z) && 
+						Math.abs(cell.z) < Math.abs((Main.mapTilesPath.getChildAt(j) as Mesh).position.z) + dim.z)
 					{
-						if((Main.mapTilesPath.getChildAt(j) as Mesh).name)	 trace( "intersecting",(Main.mapTilesPath.getChildAt(j) as Mesh).name);
+						//if((Main.mapTilesPath.getChildAt(j) as Mesh).name)	 trace( "intersecting",(Main.mapTilesPath.getChildAt(j) as Mesh).name);
+						lt = (Main.mapTilesPath.getChildAt(j) as Mesh).position;
+						rb = (Main.mapTilesPath.getChildAt(j) as Mesh).position.add(new Vector3D(-dim.x,-dim.y,dim.z));
+						lb = (Main.mapTilesPath.getChildAt(j) as Mesh).position.add(new Vector3D(0,-dim.y,dim.z));
+						rt = (Main.mapTilesPath.getChildAt(j) as Mesh).position.add(new Vector3D(-dim.x,0,0));
+						//if a plane is found. Keep a future reference to get the material later on
+						planes.push((Main.mapTilesPath.getChildAt(j) as Mesh));
 					}
 				}
-				var v0:Vector3D = source.add(new Vector3D(-200, 100, 60));
-				var v1:Vector3D = source.add(new Vector3D(200, 100, 60));
-				var v2:Vector3D = source.add(new Vector3D(-100, -200, 60));
-				var dest: Vector3D = source.add(new Vector3D(0, 32, 0));
-				var intersect:Vector3D = ray.getRayToTriangleIntersection(source, dest, v0, v1, v2 );
-				trace("intersect ray: "+intersect);
+				//this is the destination vector when checking the ray intersection, it's a simple line on the Z axis starting from the  cell position
+				var dest: Vector3D = cell.position.add(new Vector3D(0,0,Main.cellSize));
+
+				//draw some lines for visual representation of the  rays, not needed in final production
+				//be advised that the calculations for path and the lines have a Delta, which is the camera position
+				//this means that calculations for path are relative to the absolute position  of the cells and meshes
+				//the lines are displayed relative to the camera, so they appear to be "under" the actual cells
+				var line:LineSegment = new LineSegment(cell.position.subtract(adjustCamera),dest.subtract(adjustCamera),0x00ffff,0x0000ff);
+				var lineSet:SegmentSet = new SegmentSet();
+				lineSet.addSegment(line);
+				Main.away3dView.scene.addChild(lineSet);
+
+				//because we have to check the intersection with a plane, we first split the plane into 2 triangles, if all goes well then either there is no intersection,  or at most there is only one
+				var intersectL:Vector3D = ray.getRayToTriangleIntersection(cell.position, dest, lt, lb, rb);
+				var intersectR:Vector3D = ray.getRayToTriangleIntersection(cell.position, dest, lt, rt, rb);
+				var intersect: Vector3D = new Vector3D;
+				if(intersectL != null)		
+				{
+					intersect = intersectL;
+					//trace("LEFT intersect ray: "+intersectL);
+				}
+				if(intersectR != null)		
+				{
+					intersect = intersectR;
+					//trace("RIGHT intersect ray: "+intersectR);
+				}
+				
+				//here we actually take the image path and evaluate the value of the pixel where the cell intersects
+				//if the value is zero, then the intersection was with a transparent pixel, otherwise it should be GREEN
+				var material:TextureMaterial = ((planes[0] as Mesh).material as TextureMaterial);
+				var texture:BitmapTexture = material.texture as BitmapTexture;
+				var bitmapData:BitmapData = texture.bitmapData;
+				
+				//we need to convert global to local and 3-D to 2-D coordinates, and remember the camera Delta. :-)
+				var local:Vector3D = lt.subtract(intersect);
+				var _x:int = local.x;
+				var _y:int = -local.z/caz + Math.round(adjustCamera.y/say);
+				trace(bitmapData.getPixel(_x,_y).toString(16),_x,_y,Math.round(adjustCamera.y/say));
+
+				//If the pixel is GREEN, this means the cell should be made walkable as  it's on  "path"
+				if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
+				{
+					cell.isWalkable = true;
+					astar[i] = cell;
+				}
 			}
 			return astar;
 		}
@@ -151,7 +200,8 @@ package packages.map
 			{
 					var clone: Mesh = new Mesh(plane.geometry.clone(), plane.material);
 					clone.position = cell.position.subtract(new Vector3D(0,dy/2-Main.cellSize/4,dz/2-Main.cellSize/4));
-					trace(clone.position);
+					//clone.showBounds = true;
+					//trace(clone.position);
 					path.addChild(clone);
 			}
 			Main.away3dView.scene.addChild(path);

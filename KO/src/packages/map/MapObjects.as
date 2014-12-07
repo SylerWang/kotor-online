@@ -1,12 +1,12 @@
 package packages.map
 {
 	import com.rocketmandevelopment.grid.Cell;
-
+	
 	public class MapObjects extends Object
 	{
 		public function MapObjects()
 		{
-			 return;
+			return;
 		}
 		
 		public static function getMapObjects( mapID:int): Array
@@ -18,14 +18,14 @@ package packages.map
 				default:
 				{
 					var cell:Cell = new Cell(0,0,0);
-					cell.gridC=25;
-					cell.gridR=10;
+					cell.gridC=38;
+					cell.gridR=99;
 					cell.encounterID=0;
 					cells.push(cell);
 					
 					cell = new Cell(0,0,0);
-					cell.gridC=43;
-					cell.gridR=15;
+					cell.gridC=56;
+					cell.gridR=102;
 					cell.encounterID=1;
 					cells.push(cell);
 					

@@ -677,12 +677,9 @@ package
 			var texture:BitmapTexture = material.texture as BitmapTexture;
 			var bitmapData:BitmapData = texture.bitmapData;
 
-			if((event.currentTarget as Mesh).name)
-				trace((event.currentTarget as Mesh).position);//,(event.currentTarget as Mesh).geometry.subGeometries[0].vertexPositionData);
-			
 			var _x:int = event.localPosition.x + 512;
 			var _y:int = - event.localPosition.z + 512;
-			//trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
+			trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
 			if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
 			{
 				//check against only party members

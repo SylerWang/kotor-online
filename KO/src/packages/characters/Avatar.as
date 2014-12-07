@@ -58,7 +58,7 @@ package packages.characters
 					if(bestPath != null && bestPath.length > 0)
 					{
 						var walk: Array = Main.MAP3D.getWalkable(bestPath);
-						//Main.MAP3D.showPath(bestPath);
+						Main.MAP3D.showPath(bestPath);
 					}
 					
 					if(charRef.dialog != -1)
