@@ -57,7 +57,7 @@ package packages.characters
 					//trace(selectedCharacter.routeVector,selectedCharacter.targetCharacter.routeVector);
 					if(bestPath != null && bestPath.length > 0)
 					{
-						var walk: Array = Main.MAP3D.getWalkable(bestPath);
+						//var walk: Array = Main.MAP3D.getWalkable(bestPath);
 						Main.MAP3D.showPath(bestPath);
 					}
 					

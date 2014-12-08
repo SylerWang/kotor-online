@@ -120,6 +120,7 @@ package packages.map
 				
 				//this is temporary needed to hold the plane to get the material later on
 				var planes: Array = new Array;
+				//trace( "coordinates",cell.x,cell.y, "grid",cell.gridC,cell.gridR);
 				
 				//check to see which planes is the cell supposed to intersect/be part of
 				//if found, then set its vector corners for future triangulation
@@ -144,14 +145,14 @@ package packages.map
 				//this is the destination vector when checking the ray intersection, it's a simple line on the Z axis starting from the  cell position
 				var dest: Vector3D = cell.position.add(new Vector3D(0,0,Main.cellSize));
 
-				//draw some lines for visual representation of the  rays, not needed in final production
+				/*//draw some lines for visual representation of the  rays, not needed in final production
 				//be advised that the calculations for path and the lines have a Delta, which is the camera position
 				//this means that calculations for path are relative to the absolute position  of the cells and meshes
 				//the lines are displayed relative to the camera, so they appear to be "under" the actual cells
 				var line:LineSegment = new LineSegment(cell.position.subtract(adjustCamera),dest.subtract(adjustCamera),0x00ffff,0x0000ff);
 				var lineSet:SegmentSet = new SegmentSet();
 				lineSet.addSegment(line);
-				Main.away3dView.scene.addChild(lineSet);
+				Main.away3dView.scene.addChild(lineSet);*/
 
 				//because we have to check the intersection with a plane, we first split the plane into 2 triangles, if all goes well then either there is no intersection,  or at most there is only one
 				var intersectL:Vector3D = ray.getRayToTriangleIntersection(cell.position, dest, lt, lb, rb);
@@ -168,23 +169,26 @@ package packages.map
 					//trace("RIGHT intersect ray: "+intersectR);
 				}
 				
-				//here we actually take the image path and evaluate the value of the pixel where the cell intersects
+				//here, if an intersecting plane is found, we actually take the image path and evaluate the value of the pixel where the cell intersects
 				//if the value is zero, then the intersection was with a transparent pixel, otherwise it should be GREEN
-				var material:TextureMaterial = ((planes[0] as Mesh).material as TextureMaterial);
-				var texture:BitmapTexture = material.texture as BitmapTexture;
-				var bitmapData:BitmapData = texture.bitmapData;
-				
-				//we need to convert global to local and 3-D to 2-D coordinates, and remember the camera Delta. :-)
-				var local:Vector3D = lt.subtract(intersect);
-				var _x:int = local.x;
-				var _y:int = -local.z/caz + Math.round(adjustCamera.y/say);
-				trace(bitmapData.getPixel(_x,_y).toString(16),_x,_y,Math.round(adjustCamera.y/say));
-
-				//If the pixel is GREEN, this means the cell should be made walkable as  it's on  "path"
-				if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
+				if(planes.length > 0)
 				{
-					cell.isWalkable = true;
-					astar[i] = cell;
+					var material:TextureMaterial = ((planes[0] as Mesh).material as TextureMaterial);
+					var texture:BitmapTexture = material.texture as BitmapTexture;
+					var bitmapData:BitmapData = texture.bitmapData;
+					
+					//we need to convert global to local and 3-D to 2-D coordinates, and remember the camera Delta. :-)
+					var local:Vector3D = lt.subtract(intersect);
+					var _x:int = local.x;
+					var _y:int = -local.z/caz + Math.round(adjustCamera.y/say);
+					
+					//If the pixel is GREEN, this means the cell should be made walkable as  it's on  "path"
+					if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
+					{
+						cell.isWalkable = true;
+						astar[i] = cell;
+						//trace((astar[i] as Cell).isWalkable,bitmapData.getPixel(_x,_y).toString(16),_x,_y,Math.round(adjustCamera.y/say));
+					}
 				}
 			}
 			return astar;
@@ -200,10 +204,10 @@ package packages.map
 			{
 					var clone: Mesh = new Mesh(plane.geometry.clone(), plane.material);
 					clone.position = cell.position.subtract(new Vector3D(0,dy/2-Main.cellSize/4,dz/2-Main.cellSize/4));
-					//clone.showBounds = true;
-					//trace(clone.position);
+					clone.rotation = cell.rotation;
 					path.addChild(clone);
 			}
+			path.position = path.position.subtract(adjustCamera);
 			Main.away3dView.scene.addChild(path);
 		}
 		

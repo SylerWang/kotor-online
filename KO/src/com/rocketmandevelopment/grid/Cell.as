@@ -9,7 +9,7 @@ package com.rocketmandevelopment.grid
 		public var isClosed:Boolean = false;
 		public var isStart:Boolean = false;
 		public var isOpen:Boolean = false;
-		public var isWalkable:Boolean = true;
+		public var isWalkable:Boolean = false;
 		
 		public var encounterID:int = -1;
 		

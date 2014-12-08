@@ -1,6 +1,12 @@
 package com.rocketmandevelopment.grid 
 {
+	import away3d.entities.SegmentSet;
+	import away3d.primitives.LineSegment;
+	
+	import com.math.Nurbs;
 	import com.rocketmandevelopment.grid.Cell;
+	
+	import flash.geom.Vector3D;
 	
 	public class AStar {
 		public static var heuristic:Function = manhattan;
@@ -35,8 +41,8 @@ package com.rocketmandevelopment.grid
 				}
 				closed.push(currentCell);
 				currentCell.isClosed = true;
-				//trace(currentCell.neighbors.length, "is the number of neighbors for current cell", currentCell.gridC, currentCell.gridR);
-				var n:Array = currentCell.neighbors;
+				//var n:Array = currentCell.neighbors;
+				var n:Array = Main.MAP3D.getWalkable(currentCell.neighbors);//identify walkable cells
 				for(var i:int = 0; i < n.length; i++) {
 					if(n[i] == null || !n[i].isWalkable) {
 						continue;
@@ -45,19 +51,18 @@ package com.rocketmandevelopment.grid
 						open.push(n[i]);
 						n[i].isOpen = true;
 						if(isDiagonal(currentCell, n[i])) {
-							n[i].g = getDiagonalSqrt();
+							n[i].g = 1.4;
 						} else {
 							n[i].g = 1;
 						}
 						n[i].parent = currentCell;
 						n[i].g += n[i].parent.g;
 						n[i].h = heuristic(n[i], end);
-						//trace(n[i].h,n[i].gridC,n[i].gridR);
 						n[i].f = n[i].g + n[i].h;
 					} else {
 						var tg:Number;
 						if(isDiagonal(currentCell, n[i])) {
-							tg = getDiagonalSqrt();
+							tg = 1.4;
 						} else {
 							tg = 1;
 						}
@@ -71,8 +76,35 @@ package com.rocketmandevelopment.grid
 					
 				}
 			}
-			//is this still needed?
-			//Main.MAP.current.route = path;//set the map route
+			//nurbs it
+			var controlPoints:Vector.<Vector3D> = new Vector.<Vector3D>();
+			trace( "path length", path.length);
+			for(i=0;i<path.length;i++)
+			{
+				var cell: Cell = path[i];
+				controlPoints.push(cell.position);
+			}
+			
+			var result:Vector.<Vector3D> = new Vector.<Vector3D>();
+			var increment: Number = 0;
+			while (increment <= 1)
+			{
+				var out:Vector3D = new Vector3D;
+				out = Nurbs.nurbs(increment, controlPoints);
+				result.push(out);
+				increment+=0.002;
+			}
+			
+			for(i=0;i<result.length;i++)
+			{
+				var l:Vector3D = result[i].subtract(Main.MAP3D.adjustCamera);
+				var line:LineSegment = new LineSegment(l,l.subtract(new Vector3D(0,0,32)),0x00ffff,0x0000ff);
+				var lineSet:SegmentSet = new SegmentSet();
+				lineSet.addSegment(line);
+				Main.away3dView.scene.addChild(lineSet);
+				//trace( "results", result[i], result.length);
+			}
+			
 			return path;
 		}
 		
@@ -88,7 +120,6 @@ package com.rocketmandevelopment.grid
 		}
 		
 		public static function manhattan(current:Cell, end:Cell):Number {
-			//return Math.abs(current.x - end.x) + Math.abs(current.y + end.y);
 			return Math.max(Math.abs(current.x - end.x), Math.abs( current.y - end.y));
 		}
 		
@@ -102,12 +133,6 @@ package com.rocketmandevelopment.grid
 				return true;
 			}
 			return false;
-		}
-		
-		private static function getDiagonalSqrt(): Number
-		{
-			var _y:int = Math.round(Main.cellSize*Main.MAP3D.say);
-			return Math.sqrt(1*1+_y/Main.cellSize*_y/Main.cellSize);
 		}
 	}
 }

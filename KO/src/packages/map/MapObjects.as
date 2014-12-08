@@ -25,7 +25,7 @@ package packages.map
 					
 					cell = new Cell(0,0,0);
 					cell.gridC=56;
-					cell.gridR=102;
+					cell.gridR=105;
 					cell.encounterID=1;
 					cells.push(cell);
 					

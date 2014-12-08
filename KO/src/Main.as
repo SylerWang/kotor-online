@@ -115,7 +115,6 @@ package
 		public static var mapTilesPath: Mesh = new Mesh(new PlaneGeometry(0,0));
 		
 		// Starling instances
-		public static var starlingMap:Starling;
 		public static var starlingMenu:Starling;
 		public static var starlingFront:Starling;
 		public static var starlingCharacterCreation:Starling;
@@ -131,8 +130,6 @@ package
 		//private var saberOpeningCounter:int = 0;
 		//private var saberZScaleSpeed:int = 5;
 		
-		//public static var movingPlayer:Boolean = false;
-		//public static var suspend: Boolean = true;
 		//public static var runSpeed:Number;
 		public static var running:Boolean = true;
 		
@@ -140,13 +137,9 @@ package
 		private var currentMapImagesVector:Vector.<String> = new Vector.<String>();
 		public static const currentMapImagesArray:Array = new Array();
 		public static const currentMapPathImagesArray:Array = new Array();
-		//public static const currentMapImagesGrid:Array = new Array();
 		public static var currentMap:int = 1;
-		//public static const currentMapScaleX:Number = 1;
-		//public static const currentMapScaleY:Number = 1;
 		private var imageMapCounter:int = -1;
 		public static var mapGrids: Array = new Array;
-		//public static var currentMapCharacters: Array = new Array;
 		//public static var currentConversationOwner:Character;//TO DO. Unfortunately conversations/dialogues are currently statically assigned
 		
 		//Pre-loader resources
