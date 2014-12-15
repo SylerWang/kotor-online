@@ -41,8 +41,8 @@ package com.rocketmandevelopment.grid
 				}
 				closed.push(currentCell);
 				currentCell.isClosed = true;
-				//var n:Array = currentCell.neighbors;
-				var n:Array = Main.MAP3D.getWalkable(currentCell.neighbors);//identify walkable cells
+				//identify walkable cells from neighbors
+				var n:Array = Main.MAP3D.getWalkable(currentCell.neighbors);
 				for(var i:int = 0; i < n.length; i++) {
 					if(n[i] == null || !n[i].isWalkable) {
 						continue;
@@ -73,54 +73,17 @@ package com.rocketmandevelopment.grid
 							n[i].parent = currentCell;
 						}
 					}
-					
 				}
 			}
+			
 			//nurbs it
-			var controlPoints:Vector.<Vector3D> = new Vector.<Vector3D>();
-			trace( "path length", path.length);
-			for(i=0;i<path.length;i++)
-			{
-				var cell: Cell = path[i];
-				controlPoints.push(cell.position);
-			}
-			
-			var result:Vector.<Vector3D> = new Vector.<Vector3D>();
-			var increment: Number = 0;
-			while (increment <= 1)
-			{
-				var out:Vector3D = new Vector3D;
-				out = Nurbs.nurbs(increment, controlPoints);
-				result.push(out);
-				increment+=0.002;
-			}
-			
-			for(i=0;i<result.length;i++)
-			{
-				var l:Vector3D = result[i].subtract(Main.MAP3D.adjustCamera);
-				var line:LineSegment = new LineSegment(l,l.subtract(new Vector3D(0,0,32)),0x00ffff,0x0000ff);
-				var lineSet:SegmentSet = new SegmentSet();
-				lineSet.addSegment(line);
-				Main.away3dView.scene.addChild(lineSet);
-				//trace( "results", result[i], result.length);
-			}
+			Main.MAP3D.nurbsCurve(path);
 			
 			return path;
 		}
 		
-		public static function diagonal(current:Cell, end:Cell):Number {
-			var xDistance:int = Math.abs(current.x - end.x);
-			var yDistance:int = Math.abs(current.y - end.y);
-			if(xDistance > yDistance) {
-				return yDistance + (xDistance - yDistance);
-			} else {
-				return xDistance + (yDistance - xDistance);
-			}
-			return 0;
-		}
-		
 		public static function manhattan(current:Cell, end:Cell):Number {
-			return Math.max(Math.abs(current.x - end.x), Math.abs( current.y - end.y));
+			return Math.max(Math.abs(current.x - end.x), Math.abs( current.y - end.y), Math.abs( current.z - end.z));
 		}
 		
 		private static function getLowestF(list:Array):Cell {
@@ -129,7 +92,7 @@ package com.rocketmandevelopment.grid
 		}
 		
 		private static function isDiagonal(center:Cell, other:Cell):Boolean {
-			if(center.x != other.x && center.y != other.y) {
+			if(center.x != other.x && center.y != other.y && center.z != other.z) {
 				return true;
 			}
 			return false;

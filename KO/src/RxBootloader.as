@@ -3,8 +3,6 @@
 //How to use Sprite, copying as bitmap data to take dynamic snapshot of 3-D model  for portrait
 package 
 {
-    import __AS3__.vec.*;
-    
     import bootloader.*;
     
     import flash.display.*;
@@ -13,7 +11,7 @@ package
     
     public class RxBootloader extends flash.display.MovieClip
     {
-		private static const _images:__AS3__.vec.Vector.<String>=new __AS3__.vec.Vector.<String>(4);
+		private static const _images:Vector.<String>=new Vector.<String>(4);
 		private var _loaderInfo:YdcYSbaXt5c0d;
 		private var _manifest:RxBootManifest;
 		private var var7:Object;

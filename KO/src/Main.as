@@ -1,7 +1,5 @@
 package 
 {
-	import __AS3__.vec.*;
-	
 	import away3d.cameras.Camera3D;
 	import away3d.cameras.lenses.LensBase;
 	import away3d.cameras.lenses.OrthographicLens;

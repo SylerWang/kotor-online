@@ -75,9 +75,9 @@ package com.math
 					i += 1;
 				}
 				if(p == data) {
-					var salida : String = "";
+					var exit : String = "";
 					for(var u : uint = 0;u < recursion; u++) {
-						salida += baseVector[u] + ",";
+						exit += baseVector[u] + ",";
 					}
 				}
 				j += 1;
