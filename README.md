@@ -6,3 +6,5 @@ http://dhkgames.com/games/ko/
 
 a dev log can be found here
 http://forums.tigsource.com/index.php?topic=37321.0
+and here
+http://www.moddb.com/mods/kotor-online
