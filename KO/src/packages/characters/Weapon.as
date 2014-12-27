@@ -1,17 +1,12 @@
 package packages.characters
 {
+	import flash.geom.Vector3D;
+	
 	import away3d.animators.SkeletonAnimator;
-	import away3d.animators.data.JointPose;
-	import away3d.animators.data.Skeleton;
-	import away3d.animators.data.SkeletonJoint;
 	import away3d.animators.data.SkeletonPose;
-	import away3d.core.base.SubMesh;
 	import away3d.entities.JointObject;
 	import away3d.entities.Mesh;
 	import away3d.tools.SkeletonTools;
-	
-	import flash.geom.Matrix3D;
-	import flash.geom.Vector3D;
 	
 	import sunag.sea3d.SEA3D;
 
@@ -114,20 +109,20 @@ package packages.characters
 				var jointName: String = prefix + "_rhand";
 				
 				// manual pose update
-				SkeletonTools.poseFromSkeleton(SkeletonAnimator(character.characterClass.animator).globalPose, SkeletonAnimator(character.characterClass.animator).skeleton);
+				SkeletonTools.poseFromSkeleton(SkeletonAnimator(character.avatar.characterClass.animator).globalPose, SkeletonAnimator(character.avatar.characterClass.animator).skeleton);
 				
 				//create weapon joint object and add weapon to joint
-				character.weaponJointObject = JointObject.fromName(character.characterClass, jointName, true).clone() as JointObject;
+				character.weaponJointObject = JointObject.fromName(character.avatar.characterClass, jointName, true).clone() as JointObject;
 				character.weaponJointObject.addChild(character.weaponMesh);
 				
 				//set position and rotation of  weapon relative to hand
-				var jointIndex:int = SkeletonAnimator(character.characterClass.animator).skeleton.jointIndexFromName(jointName);
-				var pose:SkeletonPose = SkeletonAnimator(character.characterClass.animator).globalPose;
+				var jointIndex:int = SkeletonAnimator(character.avatar.characterClass.animator).skeleton.jointIndexFromName(jointName);
+				var pose:SkeletonPose = SkeletonAnimator(character.avatar.characterClass.animator).globalPose;
 				character.weaponMesh.position = new Vector3D(pose.jointPoses[jointIndex].translation.x,pose.jointPoses[jointIndex].translation.y,pose.jointPoses[jointIndex].translation.z);
 				//character.weaponMesh.rotation = new Vector3D(pose.jointPoses[jointIndex].orientation.x,pose.jointPoses[jointIndex].orientation.y,pose.jointPoses[jointIndex].orientation.z);
 				
 				// add joint object in character children
-				character.characterClass.addChild(character.weaponJointObject);
+				character.avatar.characterClass.addChild(character.weaponJointObject);
 				
 				//if weapon is light saber
 				if(weapon == LIGHTSABER)

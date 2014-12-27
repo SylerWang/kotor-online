@@ -1,5 +1,12 @@
 package packages.map
 {
+	import com.math.Nurbs;
+	import com.rocketmandevelopment.grid.Cell;
+	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.geom.Vector3D;
+	
 	import away3d.entities.Mesh;
 	import away3d.entities.SegmentSet;
 	import away3d.materials.ColorMaterial;
@@ -8,22 +15,13 @@ package packages.map
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	import away3d.tools.utils.Ray;
-	import away3d.utils.Cast;
-	
-	import com.math.Nurbs;
-	import com.rocketmandevelopment.grid.Cell;
-	import com.rocketmandevelopment.grid.Grid;
-	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.geom.Vector3D;
 
 	public class Map3d extends Object
 	{
 		public var zeroVector:Vector3D = new Vector3D;
 		public var adjustCamera:Vector3D = new Vector3D;
 		
-		private var dw:int=1232;
+		//private var dw:int=1232;
 		//TO DO stupid floating numbers sine and cosine are messed up in action script 3, or to be exact:  "Stupid me." :-), So I need to set the values manually
 		//instead of sine and cosine of an angle
 		private var dy:int=616;//instead of math.round( 1024* math.sin( main.camera.rotationX))
@@ -99,14 +97,14 @@ package packages.map
 			
 			//TO DO ADJUST POSITION BASED ON CAMERA ADJUSTMENT
 			Main.mapTiles.position = new Vector3D(-512,-512-(3*Main.cellSize),0);
-			Main.mapTilesPath.position = new Vector3D(-512,-512-(3*Main.cellSize),1);
+			Main.mapTilesPath.position = new Vector3D(-512,-512-(3*Main.cellSize),-1);
 			
 			Main.away3dView.scene.addChild(Main.mapTiles);
 			Main.away3dView.scene.addChild(Main.mapTilesPath);
 			Main.pathTilesListeners();
 		}
 
-		public function getWalkable(astar: Array): Array
+		public function getWalkable(astar: Array, start: Cell, end: Cell): Array
 		{
 			var ray:Ray = new Ray;
 			for (var i:int=0;i<astar.length;i++)
@@ -192,6 +190,26 @@ package packages.map
 					}
 				}
 			}
+			
+			//maybe not needed, trying to implement steering
+			/*//double check to make sure GREEN  cells are not obstructed by  NPCs
+			for(i=0;i<astar.length;i++)
+			{
+				for each( var character:Character in Main.MAP.allCharacters)
+				{
+					if(Main.MAP3D.zeroVector.equals(astar[i].position.subtract(character.routeVector)))
+					{
+						//trace( "found cell on the character", character.characterName);
+						astar[i].isWalkable = false;
+						if((astar[i].gridC == start.gridC && astar[i].gridR == start.gridR) || (astar[i].gridC == end.gridC && astar[i].gridR == end.gridR))
+						{
+							//trace( "cell matches start or end",astar[i].gridC,astar[i].gridR, start.gridC, start.gridR,end.gridC,end.gridR);
+							astar[i].isWalkable = true;
+						}
+					}
+				}
+			}*/
+			
 			return astar;
 		}
 		
@@ -335,11 +353,10 @@ package packages.map
 				// Create a straight line between the two pathVectors points
 				if(pathVectors[i] != null && pathVectors[j] != null) 
 				{
-					trace( "selected cell",i,pathVectors[i], "AND",j,pathVectors[j]);
+					//trace( "selected cell",i,pathVectors[i], "AND",j,pathVectors[j]);
 					linear_segment = InterpolateLine(pathVectors[i], pathVectors[j]);
 				}
-				else
-					trace( "a cell is empty",i,j,pathVectors[i],pathVectors[j]);
+				//else	trace( "a cell is empty",i,j,pathVectors[i],pathVectors[j]);
 				
 				// The new pathVectors is one that is the same up to index i, then linear, 
 				// then the rest of the pathVectors
@@ -347,7 +364,7 @@ package packages.map
 				//if linear segments returned is not null, then we can create a shortcut using it
 				if(linear_segment != null)
 				{
-					trace("linear_segment length", linear_segment.length);
+					//trace("linear_segment length", linear_segment.length);
 					for(k=0;k<i;k++)
 					{
 						shortcut.push(pathVectors[k]);
@@ -362,7 +379,7 @@ package packages.map
 					 }
 					 
 					 //set the updated path  as the shortcut
-					 trace( "after iteration",t, "The path length is", shortcut.length);
+					 //trace( "after iteration",t, "The path length is", shortcut.length);
 					 pathVectors = shortcut;
 				}
 					
@@ -386,7 +403,7 @@ package packages.map
 				var dir: Vector3D = end.subtract(start);
 				var ratio: Vector3D = new Vector3D;
 				var _length:Number = dir.length;
-				trace("dir length",dir.length);
+				//trace("dir length",dir.length);
 				// Just step along a line from the start to the end.
 				var max: Number = Math.max(Math.abs(end.x - start.x),Math.abs(end.y - start.y),Math.abs(end.z - start.z));
 				
@@ -407,7 +424,7 @@ package packages.map
 				//check to see if the  vectors generated are completely on path or not
 				if( shortcutter(toReturn))
 				{
-					trace( "the return length",toReturn.length);
+					//trace( "the return length",toReturn.length);
 					return toReturn;
 				}
 				else
@@ -417,7 +434,7 @@ package packages.map
 				}
 			}
 			// When we're done shortcutting, the new path is returned. ideally it would never have less than 4 vectors
-			trace( "updated path contains", pathVectors.length, "vectors for nurbs");
+			//trace( "updated path contains", pathVectors.length, "vectors for nurbs");
 			return pathVectors;
 		}
 		
@@ -445,10 +462,10 @@ package packages.map
 			controlPoints.push(pathVectors[0]);
 			controlPoints.push(pathVectors[int(Math.floor(pathVectors.length/3))]);
 			controlPoints.push(pathVectors[int(Math.floor(pathVectors.length/3))*2]);
-			controlPoints.push(pathVectors[pathVectors.length-1]);*/
-			trace( "control points length", controlPoints.length);
-			for(i=0;i<controlPoints.length;i++)
-				trace(controlPoints[i]);
+			controlPoints.push(pathVectors[pathVectors.length-1]);
+			trace( "control points length", controlPoints.length);*/
+			/*for(i=0;i<controlPoints.length;i++)
+				trace(controlPoints[i]);*/
 			
 			var result:Vector.<Vector3D> = new Vector.<Vector3D>();
 			var increment: Number = 0;
@@ -460,6 +477,8 @@ package packages.map
 				result.push(out);
 				increment+=0.002;
 			}
+			
+			trace( "number of nurbs", result.length);//statically 500 due to increment value
 			
 			for(i=0;i<result.length;i++)
 			{

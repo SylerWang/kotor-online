@@ -39,7 +39,7 @@ package away3d.sea3d.animation
 		{			
 			if (_relative == value) return;
 			
-			if ( (super.relative = value) )
+			if ( (super.relative == value) )
 			{
 				_object3d.animateTransform = new Matrix3D();
 				_comps = _object3d.animateTransform.decompose();				

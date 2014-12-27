@@ -1,4 +1,5 @@
 //TO DO currently The dialogue is a statically assigned, it needs to be dynamically evaluated based on dialogue ID from the character/NPC
+//TO DO add a few milliseconds delay before letting clicking the mouse register, currently when the dialogue is removed, the mouse immediately clicks on quick bar or background planes
 //also consider adding a banter feature. :-)
 package packages.dialog
 {
@@ -7,11 +8,15 @@ package packages.dialog
 	import flash.net.URLRequest;
 	
 	import packages.audio.GameSound;
+	import packages.characters.Action;
 	import packages.characters.Character;
 	import packages.sprites.DialogSprite;
 	
 	import starling.display.Sprite;
-	import starling.events.*;
+	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.rootsprites.StarlingFrontSprite;
 	import starling.text.TextField;
 	import starling.utils.HAlign;
@@ -323,6 +328,7 @@ package packages.dialog
 			activeImagesSprites = new Array;
 			activeTextSprites = new Array;
 			
+			//if ID is -1 that exit the dialogue
 			if(c==-1)	 
 			{
 				activeEntry = 0;
@@ -340,6 +346,16 @@ package packages.dialog
 				if(dialog)
 					StarlingFrontSprite.getInstance().removeChild(dialog);
 				else	 trace( "dialogue not found");*/
+				
+				//remove dialog references from selected character
+				var selectedCharacter: Character = Main.selectedCharacter;
+				if(selectedCharacter.actions[0] == Action.DIALOG)
+				{
+					selectedCharacter.actions.shift();
+					if(selectedCharacter.actions.length == 0)
+						selectedCharacter.targetCharacter = null;
+					trace( "removing dialogue references from selected character");
+				}
 			}
 			else
 			{

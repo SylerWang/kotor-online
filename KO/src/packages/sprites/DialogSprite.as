@@ -4,9 +4,7 @@ package packages.sprites
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.events.*;
-	import starling.text.TextField;
-	import starling.utils.HAlign;
+	import starling.events.Event;
 	
 	public class DialogSprite extends Sprite
 	{

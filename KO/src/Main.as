@@ -1,32 +1,43 @@
 package 
 {
-	import away3d.cameras.Camera3D;
-	import away3d.cameras.lenses.LensBase;
-	import away3d.cameras.lenses.OrthographicLens;
-	import away3d.cameras.lenses.PerspectiveLens;
-	import away3d.containers.*;
-	import away3d.core.managers.*;
-	import away3d.debug.*;
-	import away3d.entities.*;
-	import away3d.events.*;
+	import com.rocketmandevelopment.grid.Grid;
+	
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
+	import flash.display.Stage;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.events.UncaughtErrorEvent;
+	import flash.external.ExternalInterface;
+	import flash.geom.Point;
+	import flash.geom.Vector3D;
+	import flash.net.URLRequest;
+	
+	import away3d.containers.View3D;
+	import away3d.core.managers.Stage3DManager;
+	import away3d.core.managers.Stage3DProxy;
+	import away3d.debug.AwayStats;
+	import away3d.entities.Mesh;
+	import away3d.events.MouseEvent3D;
+	import away3d.events.Stage3DEvent;
 	import away3d.materials.TextureMaterial;
 	import away3d.primitives.PlaneGeometry;
 	import away3d.textures.BitmapTexture;
 	
-	import bootloader.*;
-	
-	import com.rocketmandevelopment.grid.Grid;
-	
-	import flash.display.*;
-	import flash.display3D.Context3D;
-	import flash.events.*;
-	import flash.external.*;
-	import flash.geom.Matrix3D;
-	import flash.geom.Point;
-	import flash.geom.Vector3D;
-	import flash.net.URLRequest;
-	import flash.text.*;
-	import flash.ui.Keyboard;
+	import bootloader.OnScreenTrivia;
+	import bootloader.RxBootManifest;
+	import bootloader.YdTQFOW62NS_g;
+	import bootloader.YdWSFLaYvzPC;
+	import bootloader.YdWSLxnP1g;
+	import bootloader.YdcYSbaXt5c0d;
+	import bootloader.YddAv3gLsRgP;
+	import bootloader.YddLFZWOdOY_RC;
+	import bootloader.YdeIQMeP7enakyu3;
 	
 	import packages.characters.Action;
 	import packages.characters.Avatar;
@@ -41,9 +52,14 @@ package
 	import packages.map.Map3d;
 	import packages.map.MapLogic;
 	
-	import starling.core.*;
-	import starling.display.Stage;
-	import starling.rootsprites.*;
+	import ru.inspirit.steering.SteerVector3D;
+	import ru.inspirit.steering.Vehicle;
+	
+	import starling.core.Starling;
+	import starling.rootsprites.StarlingCharacterCreationSprite;
+	import starling.rootsprites.StarlingFrontSprite;
+	import starling.rootsprites.StarlingIntroSprite;
+	import starling.rootsprites.StarlingMenuSprite;
 	
 	import sunag.events.SEAEvent;
 	import sunag.sea3d.SEA3D;
@@ -592,7 +608,7 @@ package
 					player.race = Race.HUMAN;
 					player.classes = Classes.GUARDIAN;
 					player.origin = Origins.CORE;
-					//trace( "setting the player Main.playerCharacter to",Gender.genderString(Main.playerCharacter.genderId), Race.raceString(Main.playerCharacter.raceId), Classes.classString(Main.playerCharacter.classes));
+					
 					playerParty.members.splice(0,1);
 					playerParty.members.push( player);//this is the first default
 					if(player.avatar == null)
@@ -622,18 +638,26 @@ package
 			{
 				//all game related operations happen here
 				
-				/*//if the active character wants to initiate the conversation with an NPC that is further away, first, it needs to get closer to it
-				if(activePlayerCharacter.currentTarget != null && activePlayerCharacter.currentTarget.dialog != -1)		
-				{
-					if(activePlayerCharacter.action != Action.MOVE)
-						activePlayerCharacter.action = Action.MOVE;
-					MOVEONMAP.moving(activePlayerCharacter.endPoint.x,activePlayerCharacter.endPoint.y);
-				}*/
-				
-				for each(var character: Character in Main.MAP.allCharacters)
+				for each(var character: Character in MAP.allCharacters)
 				{	
-					if(character.actions[0] == Action.MOVE)
-						MOVEONMAP.updatingMapPosition(character);
+					//if NOT suspend state and action is MOVE
+					if(suspendState == false && character.actions[0] == Action.MOVE)
+						MOVEONMAP.moving(character);
+					//if action is DIALOGUE, main character has a target, and the target has a dialogue ID,and dialogue not already present, initiate dialogue
+					if(character.actions[0] == Action.DIALOG)
+					{
+						var dialog:*=StarlingFrontSprite.getInstance().getChildByName("Dialog");
+						if(!dialog)
+						{
+							if(character.targetCharacter != null && character.targetCharacter.dialog != -1)	
+							{
+								suspendState = true;
+								//currentConversationOwner = charRef;
+								StarlingFrontSprite.getInstance().bars.visible = false;
+								StarlingFrontSprite.getInstance().handleDialog();
+							}
+						}
+					}
 				}
 				
 				//starlingMap.nextFrame();
@@ -663,37 +687,53 @@ package
 		
 		private function onMouse3DClick( event:MouseEvent3D): void
 		{
-			//TO DO currently destination vector is extrapolated from mouse coordinates on the  2-D stage, maybe we don't need them at all
-			var material:TextureMaterial = ((event.currentTarget as Mesh).material as TextureMaterial);
-			var texture:BitmapTexture = material.texture as BitmapTexture;
-			var bitmapData:BitmapData = texture.bitmapData;
-
-			var _x:int = event.localPosition.x + 512;
-			var _y:int = - event.localPosition.z + 512;
-			trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
-			if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
+			var dialog:*=StarlingFrontSprite.getInstance().getChildByName("Dialog");
+			if(dialog)
+				 if(suspendState == false)	 suspendState = true;
+			//else	 trace( "dialogue not found");
+			//trace( "suspendState",suspendState);
+			if (suspendState == false)
 			{
-				//check against only party members
-				for each( var partyMember: Character in playerParty.members)
+				//TO DO currently destination vector is extrapolated from mouse coordinates on the  2-D stage, maybe we don't need them at all
+				var material:TextureMaterial = ((event.currentTarget as Mesh).material as TextureMaterial);
+				var texture:BitmapTexture = material.texture as BitmapTexture;
+				var bitmapData:BitmapData = texture.bitmapData;
+	
+				var _x:int = event.localPosition.x + 512;
+				var _y:int = - event.localPosition.z + 512;
+				//trace(event.localPosition,bitmapData.getPixel(_x,_y).toString(16),_x,_y);
+				if(bitmapData.getPixel(_x,_y).toString(16) == "ff00")
 				{
-					if(partyMember.selected == true)
+					//check against only party members
+					for each( var partyMember: Character in playerParty.members)
 					{
-						if (!suspendState)
+						if(partyMember.selected == true)
 						{
 							//clear the target character and  actions queue
 							if(partyMember.targetCharacter != null)
 								partyMember.targetCharacter = null;
 							partyMember.actions = [];
 							
-							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
-							partyMember.destinationVector = O2D.c2D3D();
+							//create empty placeholder character as target/destination
+							var _blank: Character = new Character(0, false);
 							
+							//compute a vector 3-D destination based on current active player position and 2-D mouse stage coordinates
+							_blank.routeVector = O2D.c2D3D();
+							
+							//create the avatar and vehicle and assign as selected character target
+							_blank.avatar = new Avatar(_blank);
+							_blank.avatar.vehicle = new Vehicle(new SteerVector3D(_blank.routeVector.x,_blank.routeVector.y,_blank.routeVector.z));
+							_blank.avatar.vehicle.vehicleRadius = _blank.avatar.vehicle.boundsRadius = 0;
+							
+							partyMember.targetCharacter = _blank;
+							
+							//add MOVE as first action in queue	
 							partyMember.actions.unshift(Action.MOVE);
 						}
 					}
 				}
 			}
-			//trace( "main 3-D click on tiles");
+			//else	trace( "suspend!");
 		}
 		
 		private function onMouseClick( event:MouseEvent): void
@@ -797,14 +837,14 @@ package
 			for (var i:int=0;i<playerParty.members.length;i++)
 			{
 				partyMember = playerParty.members[i];
-				if(partyMember.selected = true)
+				if(partyMember.selected == true)
 				{
 					//set the adjust camera position for future use
 					var adjustment:int;
 					if(partyMember.gender == Gender.FEMALE || partyMember.gender == Gender.MALE)
 					{
-						adjustment = Main.MAP3D.adjust(Gender.genderString(partyMember.gender));
-						Main.MAP3D.adjustCamera = new Vector3D(0,Math.round(adjustment*Main.MAP3D.say),-Math.round(adjustment*Main.MAP3D.caz));
+						adjustment = MAP3D.adjust(Gender.genderString(partyMember.gender));
+						MAP3D.adjustCamera = new Vector3D(0,Math.round(adjustment*MAP3D.say),-Math.round(adjustment*MAP3D.caz));
 					}
 					//TO DO get the adjustment when the character is not female or male humanoid
 					return partyMember;

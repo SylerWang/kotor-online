@@ -1,21 +1,20 @@
 // TO DO Generalize  mouse word usage, maybe get mesh bounds as well
 package
 {
-    import away3d.tools.utils.Bounds;
-    
-    import feathers.controls.Button;
-    
     import flash.geom.Matrix;
     import flash.geom.Point;
     import flash.geom.Vector3D;
+    
+    import away3d.tools.utils.Bounds;
+    
+    import feathers.controls.Button;
     
     import packages.characters.Character;
     
     import starling.display.Image;
     import starling.display.Quad;
     import starling.display.Sprite;
-    import starling.events.*;
-    import starling.rootsprites.*;
+    import starling.rootsprites.StarlingFrontSprite;
     import starling.text.TextField;
     import starling.textures.GradientTexture;
     import starling.textures.Texture;
@@ -60,7 +59,7 @@ package
 			_sprite.addChild(_image);
 			_sprite.addChild(_text);
 			
-			Bounds.getObjectContainerBounds(character.characterClass);
+			Bounds.getObjectContainerBounds(character.avatar.characterClass);
 			var _h:int=Math.round(Bounds.height);
 			
 			var p: Point = c3D2D( character.routeVector);
@@ -70,7 +69,7 @@ package
 			
 			StarlingFrontSprite.getInstance().addChild(_sprite);
 			if( character.dialog != -1)		 displayDialog( character);
-			//trace("OVER", character.characterName, character.cells[0].gridC, character.cells[0].gridR,_sprite.x,_sprite.y);			
+			//trace("OVER", character.avatar.characterName, character.cells[0].gridC, character.cells[0].gridR,_sprite.x,_sprite.y);			
 		}
 		
 		public function displayDialog( character:Character): void
@@ -82,7 +81,7 @@ package
 			_sprite.name = "displayDialog";
 			_sprite.addChild(_iDialog);
 			
-			Bounds.getObjectContainerBounds(character.characterClass);
+			Bounds.getObjectContainerBounds(character.avatar.characterClass);
 			var _h:int=Math.round(Bounds.height);
 			
 			var p: Point = c3D2D( character.routeVector);
@@ -112,7 +111,7 @@ package
 					StarlingFrontSprite.getInstance().removeChild(_child);
 				}
 			}*/
-			//trace("OUT", character.characterName);
+			//trace("OUT", character.avatar.characterName);
 		}
 		
 		public function disableButton( button:Button, padding:int=0): void
@@ -191,7 +190,7 @@ package
 				{
 					if(partyMember.selected == true)
 					{
-						v = partyMember.characterClass.position;
+						v = partyMember.avatar.characterClass.position;
 					}
 				}
 			}
@@ -212,7 +211,7 @@ package
 			{
 				if(partyMember.selected == true)
 				{
-					middle = partyMember.characterClass.position;
+					middle = partyMember.avatar.characterClass.position;
 				}
 			}
 			var _x: int = Math.round(-(v.x - middle.x - Main.APP_WIDTH/2));

@@ -29,6 +29,19 @@ package packages.map
 					cell.encounterID=1;
 					cells.push(cell);
 					
+					cell = new Cell(0,0,0);
+					cell.gridC=49;
+					cell.gridR=102;
+					cell.encounterID=100;
+					cells.push(cell);
+					
+					/*cell = new Cell(0,0,0);
+					cell.gridC=49;
+					cell.gridR=103;
+					cell.encounterID=100;
+					cells.push(cell);*/
+					
+					//when done, return the cells
 					return cells;
 				}
 			}

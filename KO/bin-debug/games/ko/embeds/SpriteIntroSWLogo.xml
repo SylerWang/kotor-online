@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="SpriteIntroSWLogo.png">
+    <SubTexture name="IntroSWLogo" x="0" y="0" width="1808" height="802"/>
+</TextureAtlas>

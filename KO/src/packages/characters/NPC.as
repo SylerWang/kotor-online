@@ -23,6 +23,15 @@ package packages.characters
 					//character.activeWeapon = Weapon.LIGHTSABER;
 					return character;
 				}
+				case 100:
+				{
+					character = new Character(Classes.OFFICER, false);
+					character.characterName = "Placeholder";
+					character.gender = Gender.FEMALE;
+					character.race = Race.SITH;
+					character.origin = Origins.CORE;
+					return character;
+				}
 			}
 			return null;
 		}

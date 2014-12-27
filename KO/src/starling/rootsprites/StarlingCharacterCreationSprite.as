@@ -1,20 +1,26 @@
 package starling.rootsprites
 {
- 	import feathers.controls.Button;
- 	
- 	import flash.geom.Vector3D;
- 	
- 	import packages.characters.*;
- 	import packages.gui.CharacterCreationLogic;
- 	import packages.sprites.CharacterCreationSprite;
- 	
- 	import starling.display.Image;
- 	import starling.display.Sprite;
- 	import starling.events.*;
- 	import starling.text.TextField;
- 	
- 	import sunag.sea3d.SEA3D;
-
+	import flash.geom.Vector3D;
+	
+	import feathers.controls.Button;
+	
+	import packages.characters.Avatar;
+	import packages.characters.Character;
+	import packages.characters.Classes;
+	import packages.characters.Gender;
+	import packages.characters.Origins;
+	import packages.characters.Race;
+	import packages.characters.Weapon;
+	import packages.gui.CharacterCreationLogic;
+	import packages.sprites.CharacterCreationSprite;
+	
+	import starling.display.Image;
+	import starling.display.Sprite;
+	import starling.events.Event;
+	import starling.text.TextField;
+	
+	import sunag.sea3d.SEA3D;
+	
 	public class StarlingCharacterCreationSprite extends Sprite
 	{
 		private static var _instance : StarlingCharacterCreationSprite;
@@ -48,42 +54,42 @@ package starling.rootsprites
 		
 		public function initialize(): void
 		{
-			 trace( "Starling CharacterCreation initialize");
-			 var _characterCreationImage:Image = new Image(Assets.getAtlas("CHARACTERCREATION").getTexture("CharacterCreation"));
-			 _characterCreationImage.scaleX = stage.stageWidth/_characterCreationImage.width;
-			 _characterCreationImage.scaleY = stage.stageHeight/_characterCreationImage.height;
-			 //_characterCreationImage.alpha = .5;
-			 addChild(_characterCreationImage);
-
-			 var logoImage:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Logo"));
-			 logoImage.x = 50;
-			 logoImage.y = 50;
-			 addChild(logoImage);
-			 
-			 //handle the extra objects
-			 characterCreationSprite.scaleX = characterCreationSprite.scaleX*Main._scale1280;
-			 characterCreationSprite.scaleY = characterCreationSprite.scaleY*Main._scale1280;
-			 characterCreationLogic = new CharacterCreationLogic(characterCreationSprite);
-			 characterCreationSprite.x = Main.APP_WIDTH/2;
-			 addChild(characterCreationSprite);
-			 
-			 //add the next button
-			 var nextButton:Button = new Button;
-			 var buttonDownState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Down"));
-			 var buttonUpState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Up"));
-			 var buttonOverState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Over"));
-			 var _width:int = buttonUpState.width;
-			 var _height:int = buttonUpState.height;
-			 var _label:TextField = new TextField(_width, _height, "Next", "Helvetica", 14, 0xddcba2);
-			 _label.name = "_label";
-			 nextButton.addChild(_label);
-			 nextButton.defaultSkin = buttonUpState;
-			 nextButton.hoverSkin = buttonOverState;
-			 nextButton.downSkin = buttonDownState;	
-			 nextButton.x = Main.APP_WIDTH*0.75;
-			 nextButton.y = Main.APP_HEIGHT - _height;
-			 nextButton.addEventListener(Event.TRIGGERED, triggeredHandler);
-			 addChild( nextButton);
+			trace( "Starling CharacterCreation initialize");
+			var _characterCreationImage:Image = new Image(Assets.getAtlas("CHARACTERCREATION").getTexture("CharacterCreation"));
+			_characterCreationImage.scaleX = stage.stageWidth/_characterCreationImage.width;
+			_characterCreationImage.scaleY = stage.stageHeight/_characterCreationImage.height;
+			//_characterCreationImage.alpha = .5;
+			addChild(_characterCreationImage);
+			
+			var logoImage:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Logo"));
+			logoImage.x = 50;
+			logoImage.y = 50;
+			addChild(logoImage);
+			
+			//handle the extra objects
+			characterCreationSprite.scaleX = characterCreationSprite.scaleX*Main._scale1280;
+			characterCreationSprite.scaleY = characterCreationSprite.scaleY*Main._scale1280;
+			characterCreationLogic = new CharacterCreationLogic(characterCreationSprite);
+			characterCreationSprite.x = Main.APP_WIDTH/2;
+			addChild(characterCreationSprite);
+			
+			//add the next button
+			var nextButton:Button = new Button;
+			var buttonDownState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Down"));
+			var buttonUpState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Up"));
+			var buttonOverState:Image = new Image(Assets.getAtlas("MAINMENUOBJECTS").getTexture("Button_Over"));
+			var _width:int = buttonUpState.width;
+			var _height:int = buttonUpState.height;
+			var _label:TextField = new TextField(_width, _height, "Next", "Helvetica", 14, 0xddcba2);
+			_label.name = "_label";
+			nextButton.addChild(_label);
+			nextButton.defaultSkin = buttonUpState;
+			nextButton.hoverSkin = buttonOverState;
+			nextButton.downSkin = buttonDownState;	
+			nextButton.x = Main.APP_WIDTH*0.75;
+			nextButton.y = Main.APP_HEIGHT - _height;
+			nextButton.addEventListener(Event.TRIGGERED, triggeredHandler);
+			addChild( nextButton);
 		}
 		
 		private function triggeredHandler( event:Event): void
@@ -110,31 +116,31 @@ package starling.rootsprites
 			
 			//empty and re-create the chosen character avatar
 			selectedCharacter.avatar = null;
-			selectedCharacter.characterMesh = new Array;
 			var avatar: Avatar = new Avatar(selectedCharacter, true);
 			avatar.setAvatar(selectedCharacter);
 			
 			//set the active character in the middle of the screen
-			for( var m:int=0;m<selectedCharacter.characterMesh.length;m++)
+			for( var m:int=0;m<selectedCharacter.avatar.meshes.length;m++)
 			{
-				selectedCharacter.characterMesh[m].position = new Vector3D(0,0,0);
-				selectedCharacter.characterMesh[m].rotation = new Vector3D(0,-45,0);
-				selectedCharacter.characterMesh[m].scale = new Vector3D(1,1,1);
+				selectedCharacter.avatar.meshes[m].position = new Vector3D(0,0,0);
+				selectedCharacter.avatar.meshes[m].rotation = new Vector3D(0,-45,0);
+				selectedCharacter.avatar.meshes[m].scale = new Vector3D(1,1,1);
 			}
 			
 			//if player is Jedi, give it the light saber
 			if(selectedCharacter.classes == Classes.GUARDIAN || selectedCharacter.classes == Classes.CONSULAR)
 				selectedCharacter.activeWeapon = Weapon.LIGHTSABER;
 			
-			trace("setting the player selectedCharacter to",Gender.genderString(selectedCharacter.gender), Race.raceString(selectedCharacter.race), Classes.classString(selectedCharacter.classes), Origins.originsString(selectedCharacter.origin), "with meshes",selectedCharacter.characterMesh.length);
-
+			trace("setting the player selectedCharacter to",Gender.genderString(selectedCharacter.gender), Race.raceString(selectedCharacter.race), Classes.classString(selectedCharacter.classes), Origins.originsString(selectedCharacter.origin), "with meshes",selectedCharacter.avatar.meshes.length);
+			
+			//set selectedCharacter as selected for the first time manually
+			selectedCharacter.selected = true;
+			
 			//up until now, this was used temporarily, but now it needs to be populated with a final chosen character
 			Main.playerParty.members.splice(0,1);
 			Main.playerParty.members.push(selectedCharacter);
 			
-			//push the player character in the all characters array
 			Main.MAP.allCharacters = [];//empty the random character from the main menu
-			Main.MAP.allCharacters.push(selectedCharacter);
 			
 			//at this point, character is ready, so we can move on to the next
 			Main.MAP3D.setMapPlanes();

@@ -49,7 +49,7 @@ package away3d.sea3d.animation
 		
 		public function set mesh(value:Mesh):void
 		{
-			if ( (_mesh = value) )	
+			if ( (_mesh == value) )	
 			{
 				_subMesh = _mesh.subMeshes[0];
 				

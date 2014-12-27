@@ -4,17 +4,15 @@ package packages.map
 	import com.rocketmandevelopment.grid.Cell;
 	import com.rocketmandevelopment.grid.Grid;
 	
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display3D.Context3D;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	
-	import packages.characters.*;
+	import packages.characters.Avatar;
+	import packages.characters.Character;
+	import packages.characters.NPC;
+	import packages.characters.Weapon;
 	
-	import starling.events.*;
-	import starling.rootsprites.StarlingFrontSprite;
+	import ru.inspirit.steering.SteerVector3D;
+	import ru.inspirit.steering.Vehicle;
 	
 	public class MapLogic extends Object
 	{
@@ -50,6 +48,7 @@ package packages.map
 					var selectedCharacter: Character = Main.selectedCharacter;
 					//selectedCharacter.cells.splice(0,1);
 					selectedCharacter.cells.push(cell);
+					Main.MAP.allCharacters.push(selectedCharacter);
 				}
 				else
 				{
@@ -79,43 +78,34 @@ package packages.map
 
 				character.routeVector = Grid.cellAt(cell.gridC, cell.gridR).position;
 				
-				//startCell(cell);
+				//create new vehicle for future use in steering
+				//get the current position  to set the vehicle position
+				var _p: Vector3D = character.routeVector;
+				character.avatar.vehicle = new Vehicle(new SteerVector3D(_p.x,_p.y,_p.z));
+				//get the  bounds to set vehicle and  bounds radius
+				character.avatar.bounds = character.avatar.setbounds3d(character);
+				character.avatar.vehicle.vehicleRadius = character.avatar.bounds.z;
+				character.avatar.vehicle.boundsRadius = character.avatar.vehicle.vehicleRadius + 5;
+				//trace( character.characterName,character.avatar.vehicle.vehicleRadius);
+				
 				if(character.selected == false)
 				{
-					for( var m:int=0;m< character.characterMesh.length;m++)
+					for( var m:int=0;m< character.avatar.meshes.length;m++)
 					{
-						character.characterMesh[m].position = character.routeVector;
-						character.characterMesh[m].rotation = new Vector3D(0,45,0);
+						character.avatar.meshes[m].position = character.routeVector;
+						character.avatar.meshes[m].rotation = new Vector3D(0,45,0);
 					}
 				}
 				else//this is the selected character, so the camera is positioned relative to its position
 				{
-					for(m=0;m<character.characterMesh.length;m++)
+					for(m=0;m<character.avatar.meshes.length;m++)
 					{
-						character.characterMesh[m].position = character.routeVector;
+						character.avatar.meshes[m].position = character.routeVector;
 					}
 					Main.away3dView.camera.position = character.routeVector.add(Main.cameraDelta).subtract(Main.MAP3D.adjustCamera);
 				}
 			}
 		}
-		
-		/*public function startCell(cell:Cell): void
-		{
-		var _sStart:Sprite = new Sprite;
-		_sStart.name= "cellStart";
-		var _iStart:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-		_iStart.alpha = 0.5;
-		_iStart.width = Main.cellSize;
-		_iStart.height = Main.cellSize;
-		var _string: String = String(cell.gridC) + " " +  String(cell.gridR);
-		var _text:TextField = new TextField( Main.cellSize,Main.cellSize,_string, "Helvetica", 10, 0x000000);
-		_sStart.x = Main.mapGrids[Main.MAP.mapID].grid[cell.gridC][cell.gridR].x;
-		_sStart.y = Main.mapGrids[Main.MAP.mapID].grid[cell.gridC][cell.gridR].y;
-		//trace( "Sprite",_sStart.x,_sStart.y, "out of",Main.APP_WIDTH,Main.APP_HEIGHT);
-		_sStart.addChild(_iStart);
-		_sStart.addChild(_text);
-		addChild(_sStart);
-		}*/
 		
 		public function setWeapons(): void
 		{

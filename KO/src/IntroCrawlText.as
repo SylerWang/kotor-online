@@ -1,8 +1,9 @@
 package
 {
-    import flash.display.*;
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;
+    import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.FocusEvent;
     import flash.geom.PerspectiveProjection;
     import flash.geom.Point;
     

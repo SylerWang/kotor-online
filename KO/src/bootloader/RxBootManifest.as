@@ -6,7 +6,7 @@ package bootloader
     
     public class RxBootManifest extends flash.utils.ByteArray
     {
-		[Embed(source = "blob_manifest.txt", mimeType = "application/octet-stream")]
+		[Embed(source = "../blob_manifest.txt", mimeType = "application/octet-stream")]
 		protected var manifest:Class;
 		
         public function RxBootManifest(arg1:String)

@@ -108,7 +108,7 @@ package starling.rootsprites
 			if(Main.INTRO._timer == 93)
 			{
 				_IntroVenatorImage.visible = true;
-				var _shift:int=0.01;
+				var _shift:Number=0.01;
 				_IntroVenatorImage.y = -_IntroVenatorImage.height+_shift;
 			}
 			if (Main.INTRO._timer >= 126)	removeEventListener( Event.ENTER_FRAME, onFrame);

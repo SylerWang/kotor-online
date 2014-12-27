@@ -94,7 +94,6 @@ package sunag.sea3d
 	import away3d.textures.AsynBitmapCubeTexture;
 	import away3d.textures.AsynBitmapTexture;
 	import away3d.textures.AsynSingleBitmapCubeTexture;
-	import away3d.textures.BitmapCubeTexture;
 	import away3d.textures.CubeTextureBase;
 	import away3d.textures.Texture2DBase;
 	import away3d.tools.SkeletonTools;
@@ -318,7 +317,7 @@ package sunag.sea3d
 			
 			if (mat is ITranslucentMaterial)
 			{
-				if ( (ITranslucentMaterial(mat).alphaBlending = tech.texture.transparent) )
+				if ( (ITranslucentMaterial(mat).alphaBlending == tech.texture.transparent) )
 				{
 					ITranslucentMaterial(mat).alphaThreshold = .3;
 				}
@@ -647,7 +646,8 @@ package sunag.sea3d
 			
 			cube.name = sea.name;	
 			
-			_cubemap ||= new Vector.<BitmapCubeTexture>();
+			//_cubemap ||= new Vector.<BitmapCubeTexture>();
+			_cubemap ||= new Vector.<CubeTextureBase>();
 			_cubemap.push(object[sea.name + '.cube'] = sea.tag = cube);
 		}
 		

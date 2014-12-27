@@ -1,30 +1,41 @@
 package packages.characters
 {
+	import flash.geom.Vector3D;
+	
 	import away3d.animators.SkeletonAnimationSet;
 	import away3d.animators.SkeletonAnimator;
 	import away3d.animators.nodes.SkeletonClipNode;
-	import away3d.core.pick.PickingType;
 	import away3d.entities.Mesh;
-	import away3d.events.*;
+	import away3d.events.MouseEvent3D;
 	import away3d.tools.utils.Bounds;
 	
-	import com.rocketmandevelopment.grid.AStar;
-	
-	import flash.geom.Point;
-	import flash.geom.Vector3D;
-	
-	import starling.display.Image;
-	import starling.display.Sprite;
-	import starling.rootsprites.StarlingFrontSprite;
-	import starling.text.TextField;
+	import ru.inspirit.steering.SteerVector3D;
+	import ru.inspirit.steering.Vehicle;
 	
 	import sunag.sea3d.SEA3D;
 	
 	public class Avatar extends Object
 	{
+		//character meshes/animation related
+		public var activeAnimation: String;
+		public var activeAnimationHead: String;
+		public var activeAnimationBody: String;
+		public var characterBody: String;
+		public var characterHead: String;
+		public var characterClass:Mesh;
+		public var characterRace: Mesh;
+		public var meshes: Array = new Array;
+		public var animatorClass:SkeletonAnimator;
+		public var animatorRace:SkeletonAnimator;
+		
 		private var currentCharacter:Character;
 		private var selectedCharacter:Character;
 		private var sea3dMesh:SEA3D;
+
+		//vehicle
+		public var vehicle:Vehicle;
+		public var obstacles: Array = new Array;
+		public var bounds:SteerVector3D = new SteerVector3D;
 		
 		public function Avatar(character:Character, hasAvatar: Boolean = false)
 		{
@@ -48,19 +59,6 @@ package packages.characters
 					selectedCharacter.targetCharacter = charRef;
 					selectedCharacter.destinationVector = selectedCharacter.targetCharacter.routeVector;
 					
-					//remove previous path if any
-					Main.MAP3D.removePath();
-					
-					//calculate best path and if found display it
-					var bestPath: Array = AStar.aStar(selectedCharacter.cells[0], selectedCharacter.targetCharacter.cells[0]);
-					//trace( "best path length", bestPath.length);
-					//trace(selectedCharacter.routeVector,selectedCharacter.targetCharacter.routeVector);
-					if(bestPath != null && bestPath.length > 0)
-					{
-						//var walk: Array = Main.MAP3D.getWalkable(bestPath);
-						Main.MAP3D.showPath(bestPath);
-					}
-					
 					if(charRef.dialog != -1)
 						selectedCharacter.actions.unshift(Action.DIALOG);
 					
@@ -70,15 +68,6 @@ package packages.characters
 							selectedCharacter.actions.unshift(Action.MOVE);
 					}
 				}
-				/*else if(charRef.dialog != -1)	
-				{
-					Main.suspendState = true;
-					Main.currentConversationOwner = charRef;
-					StarlingFrontSprite.getInstance().bars.visible = false;
-					StarlingFrontSprite.getInstance().handleDialog();
-				}
-				else	 trace("no dialog, ATTACK! :-)");
-				//trace( "initiating dialog",charRef.characterName,charRef.dialog);*/
 			}
 		}
 		
@@ -154,7 +143,7 @@ package packages.characters
 				}
 				else
 				{
-					var h:int = int(Main.STATES.randomNumber(0,headArray.length-1));
+					h = int(Main.STATES.randomNumber(0,headArray.length-1));
 					//trace( "try again");// DHK in case no match
 					head(h);
 				}
@@ -179,31 +168,31 @@ package packages.characters
 			if(Main.gameState)
 			{
 				trace( "setting avatar for character", character.characterName);
-				character.characterClass = sea3dMesh.getMesh(characterClassMesh).clone() as Mesh;
-				character.characterClass.mouseEnabled = true;
-				character.characterClass.addEventListener(MouseEvent3D.MOUSE_OVER, onMouseOver);
-				character.characterClass.addEventListener(MouseEvent3D.CLICK, onMouseClick);
-				character.characterClass.addEventListener(MouseEvent3D.MOUSE_OUT, onMouseOut);
-				Main.away3dView.scene.addChild(character.characterClass);
+				characterClass = sea3dMesh.getMesh(characterClassMesh).clone() as Mesh;
+				characterClass.mouseEnabled = true;
+				characterClass.addEventListener(MouseEvent3D.MOUSE_OVER, onMouseOver);
+				characterClass.addEventListener(MouseEvent3D.CLICK, onMouseClick);
+				characterClass.addEventListener(MouseEvent3D.MOUSE_OUT, onMouseOut);
+				Main.away3dView.scene.addChild(characterClass);
 				
 				if(isMisc==false)
 				{
-					character.characterRace = sea3dMesh.getMesh(characterRaceMesh).clone() as Mesh;
-					Main.away3dView.scene.addChild(character.characterRace);
+					characterRace = sea3dMesh.getMesh(characterRaceMesh).clone() as Mesh;
+					Main.away3dView.scene.addChild(characterRace);
 				}
 			}
 			else
 			{
-				character.characterClass = sea3dMesh.getMesh(characterClassMesh);
-				if(isMisc==false)	character.characterRace = sea3dMesh.getMesh(characterRaceMesh);
+				characterClass = sea3dMesh.getMesh(characterClassMesh);
+				if(isMisc==false)	characterRace = sea3dMesh.getMesh(characterRaceMesh);
 			}
 
-			character.animatorClass = character.characterClass.animator as SkeletonAnimator;
-			if(isMisc==false)	character.animatorRace = character.characterRace.animator as SkeletonAnimator;
+			animatorClass = characterClass.animator as SkeletonAnimator;
+			if(isMisc==false)	animatorRace = characterRace.animator as SkeletonAnimator;
 			
 			//TO DO adding the meshes to an array. For ease of use later on
-			character.characterMesh.push(character.characterClass);
-			if(isMisc==false)	character.characterMesh.push(character.characterRace);
+			meshes.push(characterClass);
+			if(isMisc==false)	meshes.push(characterRace);
 			
 			if(Main.menuState || Main.characterCreationState)
 			{
@@ -213,20 +202,24 @@ package packages.characters
 				if(Main.menuState)
 				{
 					Main.hideBootloader();
-					for( var m:int=0;m<character.characterMesh.length;m++)
+					for( var m:int=0;m<meshes.length;m++)
 					{
-						character.characterMesh[m].position = new Vector3D(-Main.APP_WIDTH/4,-Main.APP_HEIGHT/4,0);
-						character.characterMesh[m].rotation = new Vector3D(0,45,0);
+						meshes[m].position = new Vector3D(-Main.APP_WIDTH/4,-Main.APP_HEIGHT/4,0);
+						meshes[m].rotation = new Vector3D(0,45,0);
 					}
 				}
 				if(Main.characterCreationState)
 				{
 					//TO DO handling the character position here because it changes many times
-					for(m=0;m<character.characterMesh.length;m++)
+					for(m=0;m<meshes.length;m++)
 					{
-						character.characterMesh[m].position = new Vector3D(Main.APP_WIDTH/4,-Main.APP_HEIGHT/4,0);
-						character.characterMesh[m].rotation = new Vector3D(0,-45,0);
-						character.characterMesh[m].scale = new Vector3D(2,2,2);//scale bigger
+						var _d: Number;//apply some Delta on Y axis for better positioning
+						if (Math.abs(Main.gameStage.stageWidth - 1280) < 100)	_d=80;
+						else if (Math.abs(Main.gameStage.stageWidth - 1600) < 100) _d=70;
+						else _d=50;
+						meshes[m].position = new Vector3D(Main.APP_WIDTH/4,-Main.APP_HEIGHT/4+_d,0);
+						meshes[m].rotation = new Vector3D(0,-45,0);
+						meshes[m].scale = new Vector3D(2,2,2);//scale bigger
 					}
 				}
 			}
@@ -238,8 +231,8 @@ package packages.characters
 		
 		private function buildAnimationSet(character:Character): void
 		{
-			if(character.characterHead == null)	 character.characterHead = Gender.genderString(character.gender).toLowerCase() + "_head";
-			if(character.characterBody == null)	 character.characterBody = Gender.genderString(character.gender).toLowerCase() + "_body_" + Classes.classString(Classes.getBaseClassOf(character.classes)).toLowerCase();
+			if(characterHead == null)	 characterHead = Gender.genderString(character.gender).toLowerCase() + "_head";
+			if(characterBody == null)	 characterBody = Gender.genderString(character.gender).toLowerCase() + "_body_" + Classes.classString(Classes.getBaseClassOf(character.classes)).toLowerCase();
 			
 			//identify the correct animation resource in the array based on its string mirror
 			for( var i:int=0;i<Main.sea3dResourcesString.length;i++)
@@ -248,8 +241,8 @@ package packages.characters
 				{
 					var sea3dAnimation:SEA3D = Main.sea3dResources[i];
 					
-					var clipNodes:Vector.<SkeletonClipNode> = sea3dAnimation.getSkeletonAnimationNodes(character.characterBody);			
-					var skeletonAnimationSet:SkeletonAnimationSet = character.animatorClass.animationSet as SkeletonAnimationSet;
+					var clipNodes:Vector.<SkeletonClipNode> = sea3dAnimation.getSkeletonAnimationNodes(characterBody);			
+					var skeletonAnimationSet:SkeletonAnimationSet = animatorClass.animationSet as SkeletonAnimationSet;
 					
 					for each(var node:SkeletonClipNode in clipNodes)
 					{
@@ -266,17 +259,17 @@ package packages.characters
 					}
 					
 					//set default animation as IDLE
-					if(character.activeAnimation == null)	character.activeAnimation = Animation.animationString(Animation.IDLE);
+					if(activeAnimation == null)	activeAnimation = Animation.animationString(Animation.IDLE);
 					
 					//play default animation for class/body
-					character.activeAnimationBody = character.characterBody + "_" + character.activeAnimation;
-					character.animatorClass.play(character.activeAnimationBody);
+					activeAnimationBody = characterBody + "_" + activeAnimation;
+					animatorClass.play(activeAnimationBody);
 					
 					//if the character has 2 meshes, the race is the head, usually human meshes
 					if(character.race != Race.UNDEFINED)
 					{
-						clipNodes = sea3dAnimation.getSkeletonAnimationNodes(character.characterHead);			
-						skeletonAnimationSet = character.animatorRace.animationSet as SkeletonAnimationSet;
+						clipNodes = sea3dAnimation.getSkeletonAnimationNodes(characterHead);			
+						skeletonAnimationSet = animatorRace.animationSet as SkeletonAnimationSet;
 						
 						for each(node in clipNodes)
 						{
@@ -293,22 +286,21 @@ package packages.characters
 						}
 						
 						//play default animation  for race/head
-						character.activeAnimationHead = character.characterHead + "_" + character.activeAnimation;
-						character.animatorRace.play(character.activeAnimationHead);
+						activeAnimationHead = characterHead + "_" + activeAnimation;
+						animatorRace.play(activeAnimationHead);
 					}
 				}
 			}
 		}
 		
-		public function getBounds( character: Character):Vector3D
+		//TO DO there may be a better way to handle setting the bounds
+		public function setbounds3d( character: Character):SteerVector3D
 		{
-			Bounds.getObjectContainerBounds(character.characterClass);
+			Bounds.getObjectContainerBounds(characterClass);
 			var _w: Number=Bounds.width;
-			var _d: Number=Bounds.depth;
 			var _h: Number=Bounds.height;
-			//character.characterClass.showBounds = true;
-			//trace(_w, _d, _h);
-			return new Vector3D(_w,_d,_h);
+			var _d: Number=Bounds.depth;
+			return new SteerVector3D(_w,_h,_d);
 		}
 	}
 }

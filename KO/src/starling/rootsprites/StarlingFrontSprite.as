@@ -96,6 +96,7 @@ package starling.rootsprites
 		
 		public function handleDialog(): void
 		{
+			dialogSprite.name = "Dialog";
 			dialogLogic = new DialogLogic(dialogSprite);
 			addChild(dialogSprite);
 		}

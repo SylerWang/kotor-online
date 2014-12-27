@@ -1,13 +1,5 @@
 package com.rocketmandevelopment.grid 
 {
-	import away3d.entities.SegmentSet;
-	import away3d.primitives.LineSegment;
-	
-	import com.math.Nurbs;
-	import com.rocketmandevelopment.grid.Cell;
-	
-	import flash.geom.Vector3D;
-	
 	public class AStar {
 		public static var heuristic:Function = manhattan;
 		
@@ -42,7 +34,7 @@ package com.rocketmandevelopment.grid
 				closed.push(currentCell);
 				currentCell.isClosed = true;
 				//identify walkable cells from neighbors
-				var n:Array = Main.MAP3D.getWalkable(currentCell.neighbors);
+				var n:Array = Main.MAP3D.getWalkable(currentCell.neighbors, start, end);
 				for(var i:int = 0; i < n.length; i++) {
 					if(n[i] == null || !n[i].isWalkable) {
 						continue;
@@ -76,7 +68,10 @@ package com.rocketmandevelopment.grid
 				}
 			}
 			
-			//nurbs it
+			//because most of the time  the A* would be used to get close to a destination, instead of the absolute value of the destination, we removed the last walkable cell from the path
+			path.pop();
+			
+			//nurbs it to turn the choppy path made of cells into a gentle curve that looks pretty when characters move toward their destinations
 			Main.MAP3D.nurbsCurve(path);
 			
 			return path;

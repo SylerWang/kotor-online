@@ -1,13 +1,11 @@
 package packages.characters
 {
-	import away3d.animators.SkeletonAnimator;
-	import away3d.entities.JointObject;
-	import away3d.entities.Mesh;
-	
 	import com.rocketmandevelopment.grid.Cell;
 	
-	import flash.geom.Point;
 	import flash.geom.Vector3D;
+	
+	import away3d.entities.JointObject;
+	import away3d.entities.Mesh;
 	
 	import packages.skills.Skill;
 	import packages.skills.TalentLine;
@@ -44,16 +42,7 @@ package packages.characters
 		
 		public var characterName:String = "Character";
 		public var avatar:Avatar;
-		public var activeAnimation: String;
-		public var activeAnimationHead: String;
-		public var activeAnimationBody: String;
-		public var characterBody: String;
-		public var characterHead: String;
-		public var characterClass:Mesh;
-		public var characterRace: Mesh;
-		public var characterMesh: Array = new Array;
-		public var animatorClass:SkeletonAnimator;
-		public var animatorRace:SkeletonAnimator;
+		
 		public var cells:Vector.<Cell> = new Vector.<Cell>();
 
 		public var updateVector:Vector3D = new Vector3D;//per frame Delta coordinates to be used as addition to the current coordinates during the move

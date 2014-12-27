@@ -1,21 +1,20 @@
 package
 {
-	import away3d.entities.Mesh;
-	
-	import com.rocketmandevelopment.grid.AStar;
 	import com.rocketmandevelopment.grid.Cell;
-	import com.rocketmandevelopment.grid.Grid;
 	
 	import flash.display.MovieClip;
-	import flash.geom.Point;
 	import flash.geom.Vector3D;
+	
+	import away3d.entities.Mesh;
 	
 	import packages.characters.Action;
 	import packages.characters.Character;
 	
-	import starling.display.Image;
-	import starling.display.Sprite;
-	import starling.text.TextField;
+	import ru.inspirit.steering.SteerVector3D;
+	import ru.inspirit.steering.Vehicle;
+	import ru.inspirit.steering.behavior.BehaviorList;
+	import ru.inspirit.steering.behavior.Seek;
+	import ru.inspirit.steering.behavior.UnalignedCollisionAvoidance;
 	
 	import sunag.sea3d.SEA3D;
 	
@@ -55,12 +54,12 @@ package
 				//starling map Sprite not needed anymore, remove all its references
 				
 				var rotationRad:Number = Math.atan2(character.destinationVector.z - character.routeVector.z, Math.abs(character.destinationVector.x) - Math.abs(character.routeVector.x));
-				for( var m:int=0;m<character.characterMesh.length;m++)
+				for( var m:int=0;m<character.avatar.meshes.length;m++)
 				{
-					character.characterMesh[m].position =  character.routeVector;
+					character.avatar.meshes[m].position =  character.routeVector;
 					//the following condition is needed to make sure rotation doesn't apply when roused and destination vectors are equal, otherwise the rotation jumps to coordinates zero, and looks weird. :-)
 					if (Main.MAP3D.zeroVector.equals(character.destinationVector.subtract(character.routeVector)) == false)
-						character.characterMesh[m].rotationY = rotationRad * (180 / Math.PI) - 90;
+						character.avatar.meshes[m].rotationY = rotationRad * (180 / Math.PI) - 90;
 				}
 				
 				//make sure the camera follows only the selected character and all the 3-D operations are applied for correct position of the camera
@@ -79,132 +78,98 @@ package
 					character.cells[0].y = character.endPoint.y;
 					
 					//updating NPC meshes coordinates
-					for( var m:int=0;m<character.characterMesh.length;m++)
+					for( var m:int=0;m<character.avatar.meshes.length;m++)
 					{
 						//vector has to be X,Y,0 format
-						character.characterMesh[m].position = new Vector3D(character.endPoint.x,character.endPoint.y,0);
+						character.avatar.meshes[m].position = new Vector3D(character.endPoint.x,character.endPoint.y,0);
 					}
 				}*/
 			}
 		}
 
-		public function moving1(character: Character):void//not needed
+		public function moving(character: Character):void
 		{
-			//var rotationRad:Number = Math.atan2(target.z - char.z, mouseX - target.x) ;
-			//char.rotationY = rotationRad * (180 / Math.PI); // (180 / Math.PI) = radians to degrees
-			
-			
-			//trace(rotationRad);
-			//TO DO to fix party member rotation
-			
-			//findPath();//TO DO, this broke when map tiles are now 3-D
-			
-			//trace("mouse was clicked", event.stageX, event.stageY, newX, newY);
-		}
-		
-		public function cellSprite(c:int,r:int): void
-		{
-			var _grid:Grid = Main.currentGrid;
-			var _sCell:Sprite = new Sprite;
-			_sCell.name= "cellSprite";
-			var _iCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-			_iCell.alpha = 0.5;
-			_iCell.width = Main.cellSize;
-			_iCell.height = Main.cellSize;
-			var _string: String = String(c) + " " + String(r);
-			var _text:TextField = new TextField( Main.cellSize,Main.cellSize,_string, "Helvetica", 10, 0x000000);
-			_sCell.x = _grid.grid[c][r].x;
-			_sCell.y = _grid.grid[c][r].y;
-			_sCell.addChild(_iCell);
-			_sCell.addChild(_text);
-			//StarlingMapSprite.getInstance().addChild(_sCell);
-		}
-		
-		public function findPath(): void
-		{
-			var ArrayD:*=new Array();
-			//handle the walking  grid, with a source and destination vector
-			//var gRows:*=Math.ceil(Main.gameStage.stageHeight/Main.cellSize);
-			//var gColumns:*=Math.ceil(Main.gameStage.stageWidth/Main.cellSize);
-			
-			/*if (sCell == null)		 
+			var _o:SteerVector3D = character.avatar.vehicle.position;
+			var _t:SteerVector3D = character.targetCharacter.avatar.vehicle.position;
+			if(Math.abs(_t.x-_o.x)>(character.avatar.bounds.z/2+character.targetCharacter.avatar.bounds.z/2)
+				|| Math.abs(_t.y-_o.y)>(character.avatar.bounds.z/2+character.targetCharacter.avatar.bounds.z/2)
+				|| Math.abs(_t.z-_o.z)>(character.avatar.bounds.z/2+character.targetCharacter.avatar.bounds.z/2))
 			{
-				//trace( "vector starting cell empty, setting it as",Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
-				//sCell = new Vector2D(Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
-			}*/
-			
-			var _grid:Grid = Main.currentGrid;
-			
-			//reposition the grid cells
-			for (var i:uint=0;i<_grid.grid.length;i++)
-			{
-				/*for (var m:uint=0;m<_grid.grid[0].length;m++)
+				character.avatar.vehicle.allForces = _t.diff(_o);
+				//character.avatar.vehicle.allForces = new SteerVector3D(Math.min(_o.x-_t.x,_t.x-_o.x),Math.min(_o.y-_t.y,_t.y-_o.y),Math.max(_o.z-_t.z,_t.z-_o.z));
+				//trace(_t.diff(_o));
+				
+				//DELETE this function
+				//updatingMapPosition(character);
+				
+				//if moving and obstacles not set, set them excluding the character and its target
+				//TO DO this may be needed dynamically, checked on every frame to update position of moving obstacles
+				//if(character.avatar.obstacles.length == 0)
 				{
-				//_grid.grid[i][m].x = _grid.grid[i][m].x + StarlingMapSprite.getInstance().x;
-				//_grid.grid[i][m].y = _grid.grid[i][m].y + StarlingMapSprite.getInstance().y;
+					for each(var _char:Character in Main.MAP.allCharacters)
+					{
+						if(character != _char && character.targetCharacter != _char)
+							character.avatar.obstacles.push(_char.avatar.vehicle);
+					}
+				}
 				
-				//calculate and set best path array
-				var tX:uint = Math.abs( Main.MAP._point.x - (_grid.grid[i][m].x + Main.cellSize/2));
-				var tY:uint = Math.abs( Main.MAP._point.y - (_grid.grid[i][m].y + Main.cellSize/2));
-				var tS:uint = tX*tX + tY*tY;
+				//after character obstacles are set, set the behavior
+				//first  seek the target
+				var seek:Seek = new Seek(character.targetCharacter.avatar.vehicle.position);
+				character.avatar.vehicle.behaviorList = new BehaviorList(seek);
+				seek.target = character.targetCharacter.avatar.vehicle.position;
+				seek.apply(character.avatar.vehicle);
+				character.avatar.vehicle.update();
 				
-				ArrayD.push({columns:i, rows:m, temp:tS});
-				}*/
+				//avoid NPCs
+				for each( var _v: Vehicle in character.avatar.obstacles)
+				{
+					var avoid:UnalignedCollisionAvoidance = new UnalignedCollisionAvoidance(_v);
+					character.avatar.vehicle.behaviorList = new BehaviorList(avoid);
+					avoid.avoidList = _v;
+					avoid.apply(character.avatar.vehicle);
+				}
+				//TO DO is the update  done per obstacle or it's done as the final step, ofor all the obstacles?
+				character.avatar.vehicle.update();
+				
+				//avoid obstacles set above
+				//character.avatar.vehicle.velocity.scaleBy(character.avatar.vehicle.maxSpeed);
+				
+				//update meshes position to match seeking/avoiding position 3-D from vehicle class
+				var _p:SteerVector3D = character.avatar.vehicle.position;
+				for(var m:int=0;m<character.avatar.meshes.length;m++)
+					character.avatar.meshes[m].position = new Vector3D(_p.x,_p.y,_p.z);
+				
+				//TO DO something fishy with the first reposition frame/S? look into it
+				//trace(_p);
+				
+				//trace(character.avatar.vehicle.position,character.avatar.characterClass.position);
+				
+				//handle rotation//for now, this will change probably when enabling avoiding obstacles
+				character.routeVector = new Vector3D(_p.x,_p.y,_p.z);
+				var rotationRad:Number = Math.atan2(character.targetCharacter.routeVector.z - character.routeVector.z, Math.abs(character.targetCharacter.routeVector.x) - Math.abs(character.routeVector.x));
+				for(m=0;m<character.avatar.meshes.length;m++)
+				{
+					character.avatar.meshes[m].rotationY = rotationRad * (180 / Math.PI) - 90;
+				}
+				
+				//make sure the camera follows only the selected character and all the 3-D operations are applied for correct position of the camera
+				character.routeVector = new Vector3D(_p.x,_p.y,_p.z);
+				if(character.selected == true)
+					Main.away3dView.camera.position = (character.routeVector.add(Main.cameraDelta)).subtract(Main.MAP3D.adjustCamera);
 			}
-			
-			ArrayD.sortOn("temp", Array.NUMERIC);
-			//trace("destination is  vector",ArrayD[0].columns,ArrayD[0].rows);
-			//eCell = new Vector2D(ArrayD[0].columns,ArrayD[0].rows);
-			
-			//TEMP	 showing  best path
-			/*var _imageRed:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-			_imageRed.name= "cell";
-			_imageRed.alpha = 0.5;
-			
-			_imageRed.x = _grid.grid[gColumns][gRows].x;
-			_imageRed.y = _grid.grid[gColumns][gRows].y;*/
-			
-			//display cell destination
-			cellSprite(ArrayD[0].columns,ArrayD[0].rows);
-			
-			//var _aStar:AStar =  new AStar();
-			var bestPath: Array = AStar.aStar(startCell, endCell);
-			//trace( bestPath.length);
-			//trace( "starting vector is", sCell, "		||		destination vector is",eCell, "		||		best path is", bestPath.length);
-			
-			/*for (var k:uint=0;k<bestPath.length;k++)
+			//reached the destination from the MOVE action, so time to prepare for the next queued action
+			else
 			{
-			var _imageCell:Image = new Image(Assets.getAtlas("SPECIALS").getTexture("square_red"));
-			_imageCell.name= "cell";
-			_imageCell.width = Main.cellSize;
-			_imageCell.height = Main.cellSize;
-			_imageCell.x = bestPath[k].x;
-			_imageCell.y = bestPath[k].y;
-			_imageCell.alpha = 0.5;
-			StarlingMapSprite.getInstance().addChild(_imageCell);
-			}*/
-			
-			/*//move the player along the best path
-			if (startCell == null)	
-			{
-				startCell = Main.activePlayerCharacter.cells[0];//_grid.grid[gColumns][gRows];
-				//trace( "start cell is  empty, setting it as",startCell.gridC, startCell.gridR);
+				//reset vehicle
+				character.avatar.vehicle.identity();
+				character.avatar.vehicle.position = new SteerVector3D(character.routeVector.x,character.routeVector.y,character.routeVector.z);
+				character.avatar.obstacles = new Array;
+				
+				character.actions.shift();
+				if(character.actions.length == 0)
+					character.targetCharacter = null;
 			}
-			endCell = _grid.grid[ArrayD[0].columns][ArrayD[0].rows];
-			//TO DO moving NPC as well, not only the player
-			if (_grid.grid[ArrayD[0].columns][ArrayD[0].rows].isWalkable)
-				// && Main.MAP._pixel.toString(16) ==  "ff00")
-			{
-				//Main.movingPlayer = true;
-				//updating starting cell for future calculations
-				Main.activePlayerCharacter.cells.splice(0,1);
-				Main.activePlayerCharacter.cells.push(endCell);
-				//trace(Main.activePlayerCharacter.cells.length,Main.activePlayerCharacter.cells[0].gridC,Main.activePlayerCharacter.cells[0].gridR);
-				Main.MAP.current.requestTravelTo(startCell, endCell, 30);	 
-			}
-			sCell = eCell; //this is a vector 2-D
-			startCell = endCell; //this is a Cell
-			*/
 		}
 	}
 }
